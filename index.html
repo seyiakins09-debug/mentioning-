@@ -17,7 +17,7 @@ input{background:#091431;color:#fff;border:1px solid #3a4c7c;border-radius:8px;p
 </style></head><body>
 
 <div id="landing" class="wrap"><div class="card" style="max-width:900px;margin:35px auto">
-<div class="brand"><span class="pink">SEY</span> GAMERZ</div><div class="title">🎯 MENTIONING LIVE</div><p class="sub">Real-time host + player answering game.</p>
+<div class="brand"><span class="pink">SEY</span> GAMERZ</div><div class="title">🎯 MENTIONING LIVE</div><p class="sub">Real-time host + player answering game. Both host and players must be online.</p>
 <div class="row"><button class="btn yellow" onclick="showHost()">👑 HOST GAME</button><button class="btn cyan" onclick="showJoin()">👤 JOIN AS PLAYER</button></div></div></div>
 
 <div id="hostSetup" class="wrap hidden"><div class="card">
@@ -54,14 +54,31 @@ function showHost(){el("landing").classList.add("hidden");el("hostSetup").classL
 function showJoin(){el("landing").classList.add("hidden");el("joinSetup").classList.remove("hidden")}
 function renderSets(){el("sets").innerHTML=DATA.map((s,i)=>'<button class="set '+(i===selectedSet?'on':'')+'" onclick="selectedSet='+i+';renderSets()">'+(i+1)+'. '+esc(s.name)+'</button>').join("")}
 function createRoom(){
- role="host"; peer=new Peer();
- peer.on("open",id=>{
-   roomId=id.slice(-6).toUpperCase();el("hostCode").classList.remove("hidden");el("roomCode").textContent=roomId;el("hcode").textContent=roomId;
-   el("hostStatus").textContent="Room is live. Waiting for players...";
-   el("hostSetup").classList.add("hidden");el("hostGame").classList.remove("hidden");renderHost();
- });
- peer.on("connection",c=>{c.on("open",()=>c.send(state()));c.on("data",d=>hostData(c,d));});
- peer.on("error",e=>el("hostStatus").textContent="Connection error. Try creating the room again.");
+ role="host";
+ const makeCode=()=>("SEY"+Math.random().toString(36).slice(2,7)).toUpperCase();
+ const startPeer=()=>{
+   roomId=makeCode();
+   peer=new Peer(roomId,{debug:1});
+   peer.on("open",id=>{
+     roomId=id.toUpperCase();
+     el("hostCode").classList.remove("hidden");
+     el("roomCode").textContent=roomId;
+     el("hcode").textContent=roomId;
+     el("hostStatus").textContent="Room is live. Waiting for players...";
+     el("hostSetup").classList.add("hidden");
+     el("hostGame").classList.remove("hidden");
+     renderHost();
+   });
+   peer.on("connection",c=>{
+     c.on("open",()=>c.send(state()));
+     c.on("data",d=>hostData(c,d));
+   });
+   peer.on("error",e=>{
+     if(e.type==="unavailable-id"){try{peer.destroy()}catch(x){};setTimeout(startPeer,300)}
+     else el("hostStatus").textContent="Connection error: "+(e.type||"unknown")+". Please create a new room.";
+   });
+ };
+ startPeer();
 }
 function state(){return {type:"state",set:selectedSet,round:round,question:DATA[selectedSet].questions[round],players:Object.values(players),subs:subs}}
 function hostData(c,d){
@@ -82,8 +99,18 @@ function joinRoom(){
  if(!roomId||!playerName)return alert("Enter room code and name.");
  el("joinStatus").textContent="Connecting...";
  peer=new Peer();
- peer.on("open",()=>{conn=peer.connect(roomId,{reliable:true});conn.on("open",()=>{conn.send({type:"join",name:playerName});el("joinSetup").classList.add("hidden");el("playerGame").classList.remove("hidden")});conn.on("data",playerData);conn.on("close",()=>el("pstatus").textContent="Connection closed.")});
- peer.on("error",e=>el("joinStatus").textContent="Could not connect. Check the room code.");
+ peer.on("open",()=>{
+   conn=peer.connect(roomId,{reliable:true});
+   conn.on("open",()=>{
+     conn.send({type:"join",name:playerName});
+     el("joinSetup").classList.add("hidden");
+     el("playerGame").classList.remove("hidden");
+   });
+   conn.on("data",playerData);
+   conn.on("close",()=>el("pstatus").textContent="Connection closed by host.");
+   conn.on("error",()=>el("joinStatus").textContent="Could not connect. Check the room code.");
+ });
+ peer.on("error",e=>el("joinStatus").textContent="Could not connect to room "+roomId+". Make sure the host is still on the game.");
 }
 function playerData(d){
  if(d.type!=="state")return;selectedSet=d.set;round=d.round;el("pr").textContent=round+1;el("pset").textContent=DATA[selectedSet].name;el("pq").textContent=d.question;el("pstatus").textContent="Connected • Submit your answer.";

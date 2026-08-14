@@ -59,7 +59,30 @@ function connect(){
  socket=io({transports:["websocket","polling"],reconnection:true,reconnectionAttempts:10,reconnectionDelay:500});
  socket.on("connect",()=>{ if(role==='player') joinNow(); });
  socket.on("connect_error",()=>{ if(role==='player') setJoinStatus("❌ Could not reach the game server. Please try again."); });
- socket.on("room-created",d=>{roomId=d.room;el("hostCode").classList.remove("hidden");el("roomCode").textContent=roomId;el("hcode").textContent=roomId;setHostStatus("🟢 Room LIVE — waiting for players...");el("hostSetup").classList.add("hidden");el("hostGame").classList.remove("hidden");renderHost(d.state)});
+ socket.on("room-created",d=>{
+  roomId=d.room;
+  el("hostCode").classList.remove("hidden");
+  el("roomCode").textContent=roomId;
+  el("hcode").textContent=roomId;
+  setHostStatus("🟢 Room LIVE — syncing questions...");
+  el("hostSetup").classList.add("hidden");
+  el("hostGame").classList.remove("hidden");
+
+  // Send the selected set's 10 questions to the server immediately.
+  // The server then owns the live question state for every player.
+  const qs = (DATA[selectedSet] && Array.isArray(DATA[selectedSet].questions))
+    ? DATA[selectedSet].questions.slice(0,10)
+    : [];
+  socket.emit("host-sync",{questions:qs});
+
+  renderHost({
+    ...d.state,
+    set:selectedSet,
+    round:0,
+    question:qs[0] || "Question unavailable — please choose another set."
+  });
+  setHostStatus("🟢 Room LIVE — waiting for players...");
+});
  socket.on("host-state",d=>renderHost(d));
  socket.on("player-state",d=>renderPlayer(d));
  socket.on("joined",d=>{el("joinSetup").classList.add("hidden");el("playerGame").classList.remove("hidden");el("pstatus").textContent="🟢 Connected to host • Waiting for question...";renderPlayer(d.state)});

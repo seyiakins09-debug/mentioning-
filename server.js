@@ -38,15 +38,18 @@ io.on("connection", socket=>{
     // DATA lives in the browser; the server only tracks the round number and
     // receives the current question list from the client indirectly. For a
     // central server, store the question text by reading it from the host.
-    rooms.set(code,{code,host:socket.id,set:Number(set)||0,round:0,questions:[],players:{},subs:[]});
+    rooms.set(code,{code,host:socket.id,set:Number(set)||0,round:0,questions:[],players:{},subs:[],last:Date.now()});
     socket.data.room=code;socket.data.role="host";
     socket.emit("room-created",{room:code,state:{room:code,set:Number(set)||0,round:0,question:"Waiting for the first question…",players:[],subs:[]}});
   });
 
   socket.on("host-sync",({questions}={})=>{
     const room=rooms.get(socket.data.room); if(!room||room.host!==socket.id)return;
-    if(Array.isArray(questions)&&questions.length>=10) room.questions=questions.slice(0,10).map(cleanText);
-    broadcast(room);
+    if(Array.isArray(questions)&&questions.length>=10){
+      room.questions=questions.slice(0,10).map(cleanText);
+      room.last=Date.now();
+      broadcast(room);
+    }
   });
 
   socket.on("join-room",({room,name}={})=>{
@@ -71,6 +74,7 @@ io.on("connection", socket=>{
     text=cleanText(text);if(!text)return;
     if(room.subs.some(s=>s.socketId===socket.id))return socket.emit("answer-error",{message:"You already submitted an answer for this round."});
     room.subs.push({socketId:socket.id,player:p.name,text,correct:false});
+    room.last=Date.now();
     broadcast(room);
   });
 
@@ -78,13 +82,14 @@ io.on("connection", socket=>{
     const room=rooms.get(socket.data.room); if(!room||room.host!==socket.id)return;
     const s=room.subs[Number(index)];if(!s||s.correct)return;
     s.correct=true;if(room.players[s.socketId])room.players[s.socketId].xp+=200;
+    room.last=Date.now();
     broadcast(room);
   });
 
   socket.on("next-round",()=>{
     const room=rooms.get(socket.data.room);if(!room||room.host!==socket.id)return;
     if(room.round>=9)return;
-    room.round++;room.subs=[];broadcast(room);
+    room.round++;room.subs=[];room.last=Date.now();broadcast(room);
   });
 
   socket.on("disconnect",()=>{

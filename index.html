@@ -55,37 +55,77 @@ function showJoin(){el("landing").classList.add("hidden");el("joinSetup").classL
 function renderSets(){el("sets").innerHTML=DATA.map((s,i)=>'<button class="set '+(i===selectedSet?'on':'')+'" onclick="selectedSet='+i+';renderSets()">'+(i+1)+'. '+esc(s.name)+'</button>').join("")}
 function createRoom(){
  role="host";
- const makeCode=()=>("SEY"+Math.random().toString(36).slice(2,7)).toUpperCase();
+ const makeCode=()=>("SEY"+Math.random().toString(36).slice(2,9)).toUpperCase();
  const startPeer=()=>{
    roomId=makeCode();
    peer=new Peer(roomId,{debug:1});
    peer.on("open",id=>{
-     roomId=id.toUpperCase();
+     roomId=String(id).toUpperCase();
      el("hostCode").classList.remove("hidden");
      el("roomCode").textContent=roomId;
      el("hcode").textContent=roomId;
-     el("hostStatus").textContent="Room is live. Waiting for players...";
+     el("hostStatus").textContent="Room is LIVE. Share the code with players.";
      el("hostSetup").classList.add("hidden");
      el("hostGame").classList.remove("hidden");
      renderHost();
    });
    peer.on("connection",c=>{
-     c.on("open",()=>c.send(state()));
+     c.on("open",()=>{
+       c.send(state());
+     });
      c.on("data",d=>hostData(c,d));
+     c.on("error",()=>{});
    });
+   peer.on("disconnected",()=>{try{peer.reconnect()}catch(e){}});
    peer.on("error",e=>{
-     if(e.type==="unavailable-id"){try{peer.destroy()}catch(x){};setTimeout(startPeer,300)}
-     else el("hostStatus").textContent="Connection error: "+(e.type||"unknown")+". Please create a new room.";
+     if(e.type==="unavailable-id"){
+       try{peer.destroy()}catch(x){}
+       setTimeout(startPeer,500);
+     } else {
+       el("hostStatus").textContent="Connection problem: "+(e.type||"unknown");
+     }
    });
  };
  startPeer();
 }
-function state(){return {type:"state",set:selectedSet,round:round,question:DATA[selectedSet].questions[round],players:Object.values(players),subs:subs}}
-function hostData(c,d){
- if(d.type==="join"){if(!players[d.name])players[d.name]={name:d.name,xp:0};c.playerName=d.name;broadcast();renderHost()}
- if(d.type==="answer"){subs.push({id:Date.now()+Math.random(),player:d.name,text:d.text,correct:false});broadcast();renderHost()}
+function state(){
+ return {
+   type:"state",set:selectedSet,round:round,
+   question:DATA[selectedSet].questions[round],
+   players:Object.values(players),subs:subs
+ };
 }
-function broadcast(){let st=state();Object.values(peer.connections).flat().forEach(c=>{if(c.open)c.send(st)})}
+function hostData(c,d){
+ if(d.type==="join"){
+   const clean=String(d.name||"").trim().slice(0,24);
+   if(!clean)return;
+   // Match names case-insensitively so a player cannot create duplicate score rows.
+   const existing=Object.keys(players).find(n=>n.toLowerCase()===clean.toLowerCase());
+   const key=existing||clean;
+   if(!players[key])players[key]={name:clean,xp:0};
+   c.playerName=key;
+   c.send(state());
+   broadcast();
+   renderHost();
+ }
+ if(d.type==="answer"){
+   const key=Object.keys(players).find(n=>n.toLowerCase()===String(d.name||"").toLowerCase());
+   if(!key || !String(d.text||"").trim())return;
+   // One submission per player per round; the next-round state resets this naturally.
+   const already=subs.some(a=>a.player===key);
+   if(already)return;
+   subs.push({id:Date.now()+Math.random(),player:key,text:String(d.text).trim().slice(0,200),correct:false});
+   broadcast();
+   renderHost();
+ }
+}
+function broadcast(){
+ if(!peer || !peer.connections)return;
+ const st=state();
+ Object.values(peer.connections).flat().forEach(c=>{
+   if(c && c.open){try{c.send(st)}catch(e){}}
+ });
+}
 function renderHost(){
  el("hr").textContent=round+1;el("hset").textContent=DATA[selectedSet].name;el("hq").textContent=DATA[selectedSet].questions[round];
  let arr=Object.values(players).sort((a,b)=>b.xp-a.xp);
@@ -93,30 +133,72 @@ function renderHost(){
  el("hanswers").innerHTML=subs.length?subs.map((a,i)=>'<div class="player"><b>'+esc(a.player)+'</b><div class="answer '+(a.correct?'correct':'')+'"><span>'+esc(a.text)+'</span>'+(a.correct?'<b class="xp">✓ +200 XP</b>':'<button class="btn green" onclick="award('+i+')">✓ CORRECT +200 XP</button>')+'</div></div>').join(""):"<p class='sub'>Waiting for player answers...</p>";
 }
 function award(i){if(subs[i].correct)return;subs[i].correct=true;players[subs[i].player].xp+=200;broadcast();renderHost()}
-function hostNext(){if(round>=9){alert("This set is complete. You can return and choose another set.");return}round++;subs=[];broadcast();renderHost()}
+function hostNext(){
+ if(round>=9){alert("This set is complete. You can return and choose another set.");return}
+ round++;
+ subs=[];
+ broadcast();
+ renderHost();
+}
+let submittedRound=-1;
 function joinRoom(){
- role="player";roomId=el("joinCode").value.trim().toUpperCase();playerName=el("joinName").value.trim();
+ role="player";
+ roomId=el("joinCode").value.trim().toUpperCase();
+ playerName=el("joinName").value.trim();
  if(!roomId||!playerName)return alert("Enter room code and name.");
- el("joinStatus").textContent="Connecting...";
- peer=new Peer();
+ el("joinStatus").textContent="Connecting to room "+roomId+"...";
+ peer=new Peer(undefined,{debug:1});
  peer.on("open",()=>{
    conn=peer.connect(roomId,{reliable:true});
+   if(!conn)return;
    conn.on("open",()=>{
      conn.send({type:"join",name:playerName});
-     el("joinSetup").classList.add("hidden");
-     el("playerGame").classList.remove("hidden");
+     el("joinStatus").textContent="Connected. Loading game...";
    });
    conn.on("data",playerData);
-   conn.on("close",()=>el("pstatus").textContent="Connection closed by host.");
-   conn.on("error",()=>el("joinStatus").textContent="Could not connect. Check the room code.");
+   conn.on("close",()=>{
+     el("pstatus").textContent="Connection closed. Rejoin the room if the host ended the game.";
+   });
+   conn.on("error",()=>{
+     el("joinStatus").textContent="Could not connect. Check the room code and make sure the host is still online.";
+   });
  });
- peer.on("error",e=>el("joinStatus").textContent="Could not connect to room "+roomId+". Make sure the host is still on the game.");
+ peer.on("disconnected",()=>{try{peer.reconnect()}catch(e){}});
+ peer.on("error",e=>{
+   el("joinStatus").textContent="Could not connect to room "+roomId+". Check the code and host connection.";
+ });
 }
 function playerData(d){
- if(d.type!=="state")return;selectedSet=d.set;round=d.round;el("pr").textContent=round+1;el("pset").textContent=DATA[selectedSet].name;el("pq").textContent=d.question;el("pstatus").textContent="Connected • Submit your answer.";
- let arr=d.players.sort((a,b)=>b.xp-a.xp);el("pboard").innerHTML=arr.map((p,i)=>'<div class="rank"><span>'+(i+1)+'. '+esc(p.name)+'</span><b class="xp">'+p.xp+' XP</b></div>').join("");
+ if(d.type!=="state")return;
+ const roundChanged=(submittedRound!==-1 && d.round!==round);
+ selectedSet=d.set;round=d.round;
+ el("pr").textContent=round+1;
+ el("pset").textContent=DATA[selectedSet].name;
+ el("pq").textContent=d.question;
+ if(roundChanged){
+   submittedRound=-1;
+   el("panswer").value="";
+   el("pstatus").textContent="New round! Submit your new answer.";
+ } else if(submittedRound===round){
+   el("pstatus").textContent="Answer sent to host ✓";
+ } else {
+   el("pstatus").textContent="Connected • Submit your answer.";
+ }
+ el("joinSetup").classList.add("hidden");
+ el("playerGame").classList.remove("hidden");
+ let arr=[...d.players].sort((a,b)=>b.xp-a.xp);
+ el("pboard").innerHTML=arr.map((p,i)=>'<div class="rank"><span>'+(i+1)+'. '+esc(p.name)+'</span><b class="xp">'+p.xp+' XP</b></div>').join("");
 }
-function sendAnswer(){let x=el("panswer"),v=x.value.trim();if(!v)return;conn.send({type:"answer",name:playerName,text:v});x.value="";el("pstatus").textContent="Answer sent to host ✓"}
+function sendAnswer(){
+ let x=el("panswer"),v=x.value.trim();
+ if(!v)return;
+ if(!conn||!conn.open){el("pstatus").textContent="Not connected to host.";return;}
+ if(submittedRound===round){el("pstatus").textContent="You already submitted this round.";return;}
+ conn.send({type:"answer",name:playerName,text:v});
+ submittedRound=round;
+ x.value="";
+ el("pstatus").textContent="Answer sent to host ✓";
+}
 function backHome(){location.reload()}
 function esc(x){return String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 </script></body></html>

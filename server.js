@@ -2,198 +2,75 @@ const express=require("express");
 const http=require("http");
 const {Server}=require("socket.io");
 const path=require("path");
-
-const app=express();
-const server=http.createServer(app);
-const io=new Server(server,{cors:{origin:true,credentials:true}});
+const app=express(),server=http.createServer(app);
+const io=new Server(server,{cors:{origin:"*",methods:["GET","POST"]}});
+app.get("/health",(_,res)=>res.json({ok:true,service:"sey-gamerz-mentioning"}));
+app.use(express.static(path.join(__dirname)));
 const rooms=new Map();
 
-app.get("/health",(_req,res)=>res.json({ok:true,rooms:rooms.size}));
-app.use(express.static(path.join(__dirname)));
-
-function makeCode(){
-  const chars="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-  let code;
-  do{code="";for(let i=0;i<6;i++)code+=chars[Math.floor(Math.random()*chars.length)]}
-  while(rooms.has(code));
-  return code;
+function makeCode(){const chars="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";let x;do{x=Array.from({length:6},()=>chars[Math.floor(Math.random()*chars.length)]).join("")}while(rooms.has(x));return x}
+function clean(v,n){return String(v??"").trim().slice(0,n)}
+function state(r,socketId){
+ const left=Math.max(0,20-Math.floor((Date.now()-r.roundStartedAt)/1000));
+ return {code:r.code,set:r.set,round:r.round,question:r.questions[r.round]||"Waiting for question...",
+ timeLeft:left,roundStartedAt:r.roundStartedAt,
+ players:Object.values(r.players).map(p=>({name:p.name,xp:p.xp})),
+ answers:r.answers.map(a=>({player:a.player,text:a.text,correct:a.correct})),
+ mySubmitted:!!r.answers.find(a=>a.socketId===socketId)};
 }
-function cleanName(v){return String(v||"").trim().slice(0,24)}
-function cleanText(v){return String(v||"").trim().slice(0,500)}
-
-function publicState(room,socketId){
-  const question=room.questions[room.round]||"Waiting for the host to start…";
-  const players=Object.values(room.players).map(p=>({name:p.name,xp:p.xp}));
-  const subs=room.subs.map(s=>({player:s.player,text:s.text,correct:s.correct}));
-  return {
-    room:room.code,set:room.set,round:room.round,question,players,subs,
-    submitted:room.subs.some(s=>s.socketId===socketId)
-  };
+function broadcast(r){
+ io.to(r.code).emit("state",state(r,null));
+ for(const p of Object.values(r.players))io.to(p.socketId).emit("state",state(r,p.socketId));
+ io.to(r.host).emit("state",state(r,r.host));
 }
-function broadcast(room){
-  if(!room)return;
-  io.to(room.host).emit("host-state",publicState(room,room.host));
-  for(const p of Object.values(room.players)){
-    io.to(p.socketId).emit("player-state",publicState(room,p.socketId));
-  }
-}
-
-io.on("connection",socket=>{
-
-  socket.on("create-room",({set=0}={})=>{
-    if(socket.data.room)return;
-    const code=makeCode();
-    const room={
-      code,host:socket.id,set:Number(set)||0,round:0,
-      questions:[],players:{},subs:[],last:Date.now()
-    };
-    rooms.set(code,room);
-    socket.data.room=code;
-    socket.data.role="host";
-    socket.join(code);
-    socket.emit("room-created",{room:code});
-  });
-
-  socket.on("host-sync",({questions}={},ack)=>{
-    const room=rooms.get(socket.data.room);
-    if(!room||room.host!==socket.id){
-      if(typeof ack==="function")ack({ok:false,message:"Host room not found."});
-      return;
-    }
-    if(!Array.isArray(questions)||questions.length<10){
-      if(typeof ack==="function")ack({ok:false,message:"The selected set does not contain 10 questions."});
-      return;
-    }
-    room.questions=questions.slice(0,10).map(cleanText);
-    room.round=0;
-    room.subs=[];
-    room.last=Date.now();
-    broadcast(room);
-    if(typeof ack==="function")ack({ok:true,message:"Questions synced."});
-  });
-
-  socket.on("join-room",({room:roomCode,name}={})=>{
-    const room=rooms.get(String(roomCode||"").trim().toUpperCase());
-    const clean=cleanName(name);
-    if(!room)return socket.emit("join-error",{message:"Room not found. Check the room code."});
-    if(!clean)return socket.emit("join-error",{message:"Enter your player name."});
-    if(Object.values(room.players).some(p=>p.name.toLowerCase()===clean.toLowerCase()))
-      return socket.emit("join-error",{message:"That player name is already in the room."});
-    if(Object.keys(room.players).length>=30)
-      return socket.emit("join-error",{message:"This room is full."});
-
-    room.players[socket.id]={name:clean,xp:0,socketId:socket.id};
-    socket.data.room=room.code;
-    socket.data.role="player";
-    socket.join(room.code);
-
-    socket.emit("joined",{state:publicState(room,socket.id)});
-    broadcast(room);
-  });
-
-  socket.on("submit-answer",({text}={},ack)=>{
-    const room=rooms.get(socket.data.room);
-    if(!room||socket.data.role!=="player"){
-      if(typeof ack==="function")ack({ok:false,message:"You are not in a game room."});
-      return;
-    }
-    const p=room.players[socket.id];
-    if(!p){
-      if(typeof ack==="function")ack({ok:false,message:"Player session not found."});
-      return;
-    }
-    const answer=cleanText(text);
-    if(!answer){
-      if(typeof ack==="function")ack({ok:false,message:"Answer cannot be empty."});
-      return;
-    }
-    if(room.subs.some(s=>s.socketId===socket.id)){
-      if(typeof ack==="function")ack({ok:false,message:"You already submitted an answer for this round."});
-      return;
-    }
-
-    room.subs.push({
-      socketId:socket.id,player:p.name,text:answer,correct:false
-    });
-    room.last=Date.now();
-    broadcast(room);
-    if(typeof ack==="function")ack({ok:true});
-  });
-
-  socket.on("award",({index}={},ack)=>{
-    const room=rooms.get(socket.data.room);
-    if(!room||room.host!==socket.id){
-      if(typeof ack==="function")ack({ok:false,message:"Host session not found."});
-      return;
-    }
-    const n=Number(index);
-    if(!Number.isInteger(n)||n<0||n>=room.subs.length){
-      if(typeof ack==="function")ack({ok:false,message:"That answer is no longer available."});
-      return;
-    }
-    const sub=room.subs[n];
-    if(!sub||sub.correct){
-      if(typeof ack==="function")ack({ok:false,message:"This answer has already been awarded."});
-      return;
-    }
-
-    sub.correct=true;
-    if(room.players[sub.socketId])room.players[sub.socketId].xp+=200;
-    room.last=Date.now();
-    broadcast(room);
-    if(typeof ack==="function")ack({ok:true,message:`${sub.player} received +200 XP.`});
-  });
-
-  socket.on("next-round",({},ack)=>{
-    const room=rooms.get(socket.data.room);
-    if(!room||room.host!==socket.id){
-      if(typeof ack==="function")ack({ok:false,message:"Host session not found."});
-      return;
-    }
-    if(room.questions.length<10){
-      if(typeof ack==="function")ack({ok:false,message:"Questions are not synced yet."});
-      return;
-    }
-    if(room.round>=9){
-      if(typeof ack==="function")ack({ok:false,message:"All 10 rounds in this set are complete."});
-      return;
-    }
-
-    room.round+=1;
-    room.subs=[]; // every player gets a fresh answer slot
-    room.last=Date.now();
-    broadcast(room);
-
-    if(typeof ack==="function")ack({
-      ok:true,message:`Round ${room.round+1} question is ready.`
-    });
-  });
-
-  socket.on("disconnect",()=>{
-    const code=socket.data.room;
-    if(!code)return;
-    const room=rooms.get(code);
-    if(!room)return;
-
-    if(room.host===socket.id){
-      rooms.delete(code);
-      io.to(code).emit("join-error",{message:"The host has left the room."});
-      return;
-    }
-
-    delete room.players[socket.id];
-    room.subs=room.subs.filter(s=>s.socketId!==socket.id);
-    room.last=Date.now();
-    broadcast(room);
-  });
+io.on("connection",s=>{
+ s.on("create-room",({set=0}={},cb)=>{
+   const r={code:makeCode(),host:s.id,set:Number(set)||0,round:0,questions:[],answers:[],players:{},roundStartedAt:Date.now()};
+   rooms.set(r.code,r);s.join(r.code);s.data.room=r.code;s.data.role="host";
+   s.emit("room-created",{code:r.code});cb?.({ok:true});
+ });
+ s.on("sync-questions",({questions}={},cb)=>{
+   const r=rooms.get(s.data.room);
+   if(!r||r.host!==s.id)return cb?.({ok:false,message:"Host room not found."});
+   if(!Array.isArray(questions)||questions.length<10)return cb?.({ok:false,message:"This set is missing questions."});
+   r.questions=questions.slice(0,10).map(q=>clean(q,500));r.round=0;r.answers=[];r.roundStartedAt=Date.now();broadcast(r);cb?.({ok:true});
+ });
+ s.on("join-room",({room,name}={},cb)=>{
+   const r=rooms.get(clean(room,10).toUpperCase()),n=clean(name,30);
+   if(!r)return cb?.({ok:false,message:"Room not found. Check the code."});
+   if(!n)return cb?.({ok:false,message:"Enter your name."});
+   if(Object.values(r.players).some(p=>p.name.toLowerCase()===n.toLowerCase()))return cb?.({ok:false,message:"That name is already in the room."});
+   r.players[s.id]={name:n,xp:0,socketId:s.id};s.data.room=r.code;s.data.role="player";s.join(r.code);broadcast(r);cb?.({ok:true});
+ });
+ s.on("submit-answer",({text}={},cb)=>{
+   const r=rooms.get(s.data.room),p=r?.players[s.id],v=clean(text,500);
+   if(!r||!p)return cb?.({ok:false,message:"Your player connection is not registered."});
+   if(Date.now()-r.roundStartedAt>=20000)return cb?.({ok:false,message:"Time is up for this question."});
+   if(!v)return cb?.({ok:false,message:"Answer cannot be empty."});
+   if(r.answers.some(a=>a.socketId===s.id))return cb?.({ok:false,message:"You already submitted this round."});
+   r.answers.push({socketId:s.id,player:p.name,text:v,correct:false});broadcast(r);cb?.({ok:true});
+ });
+ s.on("mark-correct",({index}={},cb)=>{
+   const r=rooms.get(s.data.room);
+   if(!r||r.host!==s.id)return cb?.({ok:false,message:"Only the host can mark answers."});
+   const a=r.answers[Number(index)];
+   if(!a)return cb?.({ok:false,message:"Answer not found. It may have changed."});
+   if(a.correct)return cb?.({ok:false,message:"That answer is already marked correct."});
+   a.correct=true;if(r.players[a.socketId])r.players[a.socketId].xp+=200;
+   broadcast(r);cb?.({ok:true,message:`${a.player} received +200 XP.`});
+ });
+ s.on("next-round",(_,cb)=>{
+   const r=rooms.get(s.data.room);
+   if(!r||r.host!==s.id)return cb?.({ok:false,message:"Only the host can move to the next round."});
+   if(r.questions.length<10)return cb?.({ok:false,message:"Questions are not loaded yet."});
+   if(r.round>=9)return cb?.({ok:false,message:"This set already reached round 10."});
+   r.round++;r.answers=[];r.roundStartedAt=Date.now();broadcast(r);cb?.({ok:true,message:`Round ${r.round+1} is ready. All players can answer again.`});
+ });
+ s.on("disconnect",()=>{
+   const r=rooms.get(s.data.room);if(!r)return;
+   if(r.host===s.id){rooms.delete(r.code);return}
+   delete r.players[s.id];r.answers=r.answers.filter(a=>a.socketId!==s.id);broadcast(r);
+ });
 });
-
-setInterval(()=>{
-  const now=Date.now();
-  for(const [code,room] of rooms){
-    if(now-(room.last||now)>6*60*60*1000)rooms.delete(code);
-  }
-},30*60*1000);
-
 const PORT=process.env.PORT||10000;
-server.listen(PORT,"0.0.0.0",()=>console.log(`MENTIONING server listening on ${PORT}`));
+server.listen(PORT,"0.0.0.0",()=>console.log("SEY GAMERZ MENTIONING running on "+PORT));

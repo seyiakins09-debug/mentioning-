@@ -1,9 +1,15 @@
 {
-  "name":"sey-gamerz-mentioning-live",
-  "version":"2.0.0",
-  "private":true,
-  "main":"server.js",
-  "scripts":{"start":"node server.js"},
-  "engines":{"node":">=20 <25"},
-  "dependencies":{"express":"^4.21.2","socket.io":"^4.8.1"}
+  "name": "sey-gamerz-mentioning",
+  "version": "3.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "socket.io": "^4.8.1"
+  }
 }

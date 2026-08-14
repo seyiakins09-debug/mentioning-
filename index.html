@@ -1,286 +1,142 @@
 <!doctype html>
-<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SEY GAMERZ — MENTIONING LIVE</title>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SEY GAMERZ — MENTIONING</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#050817;color:#fff;font-family:Arial,sans-serif}
-body:before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle at 15% 10%,#2a116055,transparent 30%),radial-gradient(circle at 90% 20%,#003f6d55,transparent 35%)}
-.wrap{max-width:1400px;margin:auto;padding:18px}.top{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:15px 20px;border-bottom:1px solid #27335c;background:#070a1b;position:sticky;top:0;z-index:3}
-.brand{font-size:28px;font-weight:1000;font-style:italic}.pink{color:#ff2cc7}.title{font-size:45px;font-weight:1000;color:#ffd21a}.sub{color:#aeb8d9}.card{background:linear-gradient(145deg,#111a45,#120d2e);border:1px solid #303c70;border-radius:14px;padding:16px;box-shadow:0 8px 28px #0006}
-.grid{display:grid;grid-template-columns:1fr 330px;gap:15px}.q{min-height:220px;background:linear-gradient(135deg,#123b91,#171048);display:flex;flex-direction:column;justify-content:center}.qtext{font-size:34px;font-weight:900;margin-top:20px}
-.btn{border:0;border-radius:9px;padding:11px 15px;color:#fff;background:#7025c9;font-weight:900;cursor:pointer}.green{background:#00a85a}.red{background:#d91845}.yellow{background:#f3c400;color:#111}.cyan{background:#007ea8}.row{display:flex;gap:8px;flex-wrap:wrap}
-input{background:#091431;color:#fff;border:1px solid #3a4c7c;border-radius:8px;padding:12px;flex:1;min-width:160px}.badge{background:#28103e;border:1px solid #a936dc;color:#ff65d7;border-radius:10px;padding:9px 14px;font-weight:900}
-.players{display:flex;flex-direction:column;gap:8px}.player{background:#0b1637;border:1px solid #2c3c70;border-radius:9px;padding:10px}.answer{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:8px;padding:10px;border:1px solid #344b83;background:#14234a;border-radius:8px}.answer.correct{border-color:#20e879;background:#06462f}.xp{color:#ffd21a;font-weight:1000}.rank{display:flex;justify-content:space-between;padding:10px 3px;border-bottom:1px solid #29325a}
-.sets{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.set{padding:10px;background:#0b1738;color:#fff;border:1px solid #334271;border-radius:8px;cursor:pointer}.set.on{border-color:#ff35c7;background:#321047}
-.hidden{display:none}.center{text-align:center}.code{font-size:34px;letter-spacing:5px;color:#65e7ff;font-weight:1000}.status{padding:8px;border-radius:8px;background:#101c3c;color:#aeb8d9}
-@media(max-width:900px){.grid{grid-template-columns:1fr}.sets{grid-template-columns:repeat(2,1fr)}.title{font-size:34px}.qtext{font-size:26px}}
-</style></head><body>
+:root{--bg:#050714;--card:#0b1024;--line:#29335f;--gold:#ffd21c;--pink:#ff3bd4;--cyan:#25c8ff;--green:#28ef67;--red:#ff4757;--text:#f7f8ff;--muted:#9da8c8}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#141b4d,#050714 60%);color:var(--text);font-family:Arial,sans-serif;min-height:100vh}
+button,input{font:inherit}.wrap{max-width:1250px;margin:auto;padding:16px}.top{display:flex;align-items:center;justify-content:space-between;border:1px solid var(--line);background:#070b19ee;border-radius:14px;padding:12px 16px;margin-bottom:12px}.brand{font-size:25px;font-weight:900}.brand span{color:var(--pink)}.pill{border:1px solid #6041a0;padding:8px 14px;border-radius:10px;color:#eab8ff}
+.screen{display:none}.screen.on{display:block}.card{background:linear-gradient(180deg,#0c1229,#080c1b);border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:0 8px 25px #0005}.center{max-width:600px;margin:60px auto;text-align:center}.title{font-size:46px;color:var(--gold);font-weight:900}.sub{color:var(--muted);line-height:1.5}.btn{border:0;border-radius:9px;padding:12px 16px;font-weight:900;cursor:pointer;color:white;background:#26345f;margin:4px}.btn:hover{filter:brightness(1.15)}.green{background:#0c9d44}.purple{background:#7628ca}.blue{background:#075bc6}.red{background:#b61e2b}.gold{background:#a77b00}.field{width:100%;padding:13px;background:#070b18;color:white;border:1px solid var(--line);border-radius:9px;margin:6px 0}.status{min-height:22px;color:var(--cyan);font-weight:bold;margin-top:8px}.sets{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;max-height:390px;overflow:auto}.set{padding:10px;border:1px solid var(--line);background:#0a1024;color:white;border-radius:8px;cursor:pointer;text-align:left}.set.on{border-color:var(--pink);background:#29143d}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.gamegrid{display:grid;grid-template-columns:1fr 1.9fr 1.2fr;gap:12px}.qbox{min-height:220px;display:flex;flex-direction:column;justify-content:center;text-align:center}.q{font-size:24px;line-height:1.35;font-weight:800;margin:18px 0}.timer{font-size:40px;color:var(--gold);font-weight:900}.answers{max-height:450px;overflow:auto}.answer{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px;margin:7px 0;border:1px solid #33406d;border-radius:9px;background:#0b1128}.answer.correct{border-color:var(--green);background:#092718}.xp{color:var(--gold);font-weight:900}.rank{display:flex;justify-content:space-between;padding:9px;border-bottom:1px solid #1b2443}.bigcode{font-size:40px;letter-spacing:7px;color:var(--gold);font-weight:900}.hidden{display:none!important}
+@media(max-width:900px){.gamegrid,.grid{grid-template-columns:1fr}.sets{grid-template-columns:1fr 1fr}.title{font-size:36px}}@media(max-width:560px){.sets{grid-template-columns:1fr}.bigcode{font-size:30px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top"><div class="brand"><span>SEY</span> GAMERZ</div><div id="topStatus" class="pill">MENTIONING</div></header>
 
-<div id="landing" class="wrap"><div class="card" style="max-width:900px;margin:35px auto">
-<div class="brand"><span class="pink">SEY</span> GAMERZ</div><div class="title">🎯 MENTIONING LIVE</div><p class="sub">Real-time host + player answering game. Both host and players must be online.</p>
-<div class="row"><button class="btn yellow" onclick="showHost()">👑 HOST GAME</button><button class="btn cyan" onclick="showJoin()">👤 JOIN AS PLAYER</button></div></div></div>
+<section id="home" class="screen on"><div class="center card">
+<div class="title">🎯 MENTIONING</div><p class="sub">Think Fast. Type Fast. Be First.</p>
+<button class="btn purple" onclick="openHost()">HOST GAME</button>
+<button class="btn blue" onclick="openJoin()">JOIN GAME</button>
+</div></section>
 
-<div id="hostSetup" class="wrap hidden"><div class="card">
-<div class="brand"><span class="pink">SEY</span> GAMERZ</div><h1>👑 HOST SETUP</h1>
-<h3>📖 GAME INSTRUCTIONS</h3><p class="sub">30 sets • 10 rounds per set • players submit answers themselves • host decides correctness • correct answer earns <b class="xp">+200 XP</b>.</p>
-<div class="row"><button class="btn green" onclick="createRoom()">CREATE LIVE ROOM</button></div>
-<div id="hostCode" class="center hidden"><p>Share this room code:</p><div class="code" id="roomCode"></div><p class="status" id="hostStatus">Waiting for players...</p></div>
-<h3>CHOOSE SET</h3><div id="sets" class="sets"></div></div></div>
+<section id="hostSetup" class="screen"><div class="card">
+<h2>🎮 HOST SETUP</h2><p class="sub">Choose one preloaded set. You do not need to type questions.</p>
+<div id="sets" class="sets"></div><br>
+<button class="btn green" onclick="createRoom()">CREATE ROOM</button><button class="btn" onclick="home()">BACK</button>
+<div id="hostSetupStatus" class="status"></div></div></section>
 
-<div id="joinSetup" class="wrap hidden"><div class="card" style="max-width:650px;margin:auto">
-<div class="brand"><span class="pink">SEY</span> GAMERZ</div><h1>👤 JOIN GAME</h1>
-<input id="joinCode" placeholder="ROOM CODE" style="width:100%;margin:8px 0"><input id="joinName" placeholder="YOUR PLAYER NAME" style="width:100%;margin:8px 0">
-<button class="btn green" onclick="joinRoom()">JOIN ROOM</button><p id="joinStatus" class="status" style="margin-top:12px"></p></div></div>
+<section id="joinSetup" class="screen"><div class="center card">
+<h2>🚀 JOIN GAME</h2><input id="joinName" class="field" placeholder="Your player name">
+<input id="joinCode" class="field" placeholder="6-character room code" maxlength="6">
+<button class="btn blue" onclick="joinRoom()">JOIN ROOM</button><button class="btn" onclick="home()">BACK</button>
+<div id="joinStatus" class="status"></div></div></section>
 
-<div id="hostGame" class="hidden"><div class="top"><div class="brand"><span class="pink">SEY</span> GAMERZ</div><div class="badge">HOST • ROUND <b id="hr">1</b>/10</div><div class="row"><button id="nextBtn" class="btn yellow" onclick="hostNext()">NEXT ROUND →</button><button class="btn red" onclick="backHome()">LEAVE</button></div></div>
-<div class="wrap"><div class="row" style="justify-content:space-between;align-items:center"><div><div class="title">🎯 MENTIONING 🎯</div><div class="sub">Host Control Panel</div></div><div class="badge" id="hset"></div></div>
-<div class="grid" style="margin-top:14px"><main><div class="card q"><b style="color:#6fe9ff">🎯🎮 GC QUESTION 🎮🎯</b><div id="hq" class="qtext"></div></div>
-<div class="card" style="margin-top:12px"><h3 style="color:#ffd21a">📥 PLAYER ANSWERS</h3><div id="hanswers" class="players"></div></div></main>
-<aside><div class="card"><h3 style="color:#ff66d6">🏆 LIVE LEADERBOARD</h3><div id="hboard"></div></div>
-<div class="card" style="margin-top:12px"><h3>🔑 ROOM</h3><div class="code" id="hcode"></div><p class="sub">Players join using this code.</p></div></aside></div></div></div>
+<section id="hostGame" class="screen">
+<div class="grid">
+<div class="card"><small>ROOM CODE</small><div id="hostCode" class="bigcode">------</div><div id="hostStatus" class="status"></div></div>
+<div class="card"><b id="hostRound">ROUND 1 / 10</b><br><button id="nextBtn" class="btn purple" onclick="nextRound()">NEXT ROUND →</button><button class="btn red" onclick="home()">LEAVE GAME</button></div>
+</div><br>
+<div class="gamegrid">
+<div class="card"><h3>🏆 LIVE LEADERBOARD</h3><div id="hostBoard"></div></div>
+<div class="card qbox"><div>🎯 GC QUESTION</div><div id="hostQuestion" class="q">Waiting for question...</div><div class="timer"><span id="hostTimer">20</span> SEC</div></div>
+<div class="card"><h3>📥 PLAYER ANSWERS</h3><div id="hostAnswers" class="answers"><p class="sub">Waiting for player answers...</p></div></div>
+</div>
+</section>
 
-<div id="playerGame" class="hidden"><div class="top"><div class="brand"><span class="pink">SEY</span> GAMERZ</div><div class="badge">ROUND <b id="pr">1</b>/10</div><button class="btn red" onclick="backHome()">LEAVE</button></div>
-<div class="wrap"><div class="title">🎯 MENTIONING</div><div class="sub" id="pset"></div>
-<div class="card q" style="margin-top:14px"><b style="color:#6fe9ff">🎯🎮 QUESTION 🎮🎯</b><div id="pq" class="qtext"></div></div>
-<div class="card" style="margin-top:14px"><h3>⚡ SEND YOUR ANSWER</h3><div class="row"><input id="panswer" placeholder="Type your answer..."><button id="sendAnswerBtn" class="btn green" onclick="sendAnswer()">➤ SEND</button></div><p id="pstatus" class="status">Waiting for the host...</p></div>
-<div class="card" style="margin-top:14px"><h3>🏆 LEADERBOARD</h3><div id="pboard"></div></div></div></div>
-
+<section id="playerGame" class="screen">
+<div class="grid"><div class="card"><b id="playerRound">ROUND 1 / 10</b><div id="playerStatus" class="status"></div></div>
+<div class="card"><h3>🏆 LEADERBOARD</h3><div id="playerBoard"></div></div></div><br>
+<div class="card qbox"><div>🎯 QUESTION</div><div id="playerQuestion" class="q">Waiting for host...</div><div class="timer"><span id="playerTimer">20</span> SEC</div></div><br>
+<div class="card"><h3>⚡ SUBMIT YOUR ANSWER</h3><input id="answerInput" class="field" placeholder="Type your answer..." autocomplete="off">
+<button id="submitBtn" class="btn green" onclick="submitAnswer()">SUBMIT ANSWER</button><div id="answerStatus" class="status"></div></div>
+</section>
+</div>
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
-const DATA=[{"name": "TECH WAVE", "questions": ["Name 5 smartphone brands.", "Name 5 social media platforms.", "Name 5 web browsers.", "Name 5 programming languages.", "Name 5 computer operating systems.", "Name 5 messaging apps.", "Name 5 search engines.", "Name 5 computer hardware.", "Name 5 technology companies.", "Name 5 things you can do with a smartphone."]}, {"name": "MUSIC MANIA", "questions": ["Name 5 Nigerian music artists.", "Name 5 female music artists.", "Name 5 music genres.", "Name 5 musical instruments.", "Name 5 African music artists.", "Name 5 things found in a recording studio.", "Name 5 music streaming platforms.", "Name 5 famous bands or groups.", "Name 5 words associated with a concert.", "Name 5 songs with a number in the title."]}, {"name": "COUNTRY HUNT", "questions": ["Name 5 African countries.", "Name 5 countries in Europe.", "Name 5 countries in Asia.", "Name 5 countries in North America.", "Name 5 countries in South America.", "Name 5 island countries.", "Name 5 countries that start with A.", "Name 5 countries that start with S.", "Name 5 countries containing the letter N.", "Name 5 countries you would like to visit."]}, {"name": "CITY & PLACE", "questions": ["Name 5 cities in Nigeria.", "Name 5 capital cities.", "Name 5 famous cities around the world.", "Name 5 tourist attractions.", "Name 5 places where people go on holiday.", "Name 5 places found at an airport.", "Name 5 places found in a city.", "Name 5 famous landmarks.", "Name 5 places associated with football.", "Name 5 places you would not want to be late for."]}, {"name": "NAME GAME", "questions": ["Name 5 names that start with A.", "Name 5 names that start with B.", "Name 5 names that start with C.", "Name 5 male names that start with D.", "Name 5 female names that start with E.", "Name 5 names that start with M.", "Name 5 Nigerian names.", "Name 5 unisex names.", "Name 5 names with 5 letters.", "Name 5 names containing the letter Z."]}, {"name": "FOOD FRENZY", "questions": ["Name 5 Nigerian foods.", "Name 5 fruits.", "Name 5 vegetables.", "Name 5 fast foods.", "Name 5 breakfast foods.", "Name 5 foods made with rice.", "Name 5 foods cooked in a pot.", "Name 5 sweet foods.", "Name 5 foods commonly eaten at parties.", "Name 5 kitchen ingredients."]}, {"name": "ANIMAL KINGDOM", "questions": ["Name 5 wild animals.", "Name 5 domestic animals.", "Name 5 birds.", "Name 5 animals that live in water.", "Name 5 animals that can fly.", "Name 5 animals with four legs.", "Name 5 dangerous animals.", "Name 5 farm animals.", "Name 5 animals that start with C.", "Name 5 animals seen in a zoo."]}, {"name": "SPORTS ARENA", "questions": ["Name 5 football clubs.", "Name 5 football players.", "Name 5 sports.", "Name 5 basketball teams.", "Name 5 things found on a football pitch.", "Name 5 sporting competitions.", "Name 5 athletes.", "Name 5 sports played with a ball.", "Name 5 things a referee can use.", "Name 5 countries famous for football."]}, {"name": "MOVIE & TV", "questions": ["Name 5 movie genres.", "Name 5 streaming services.", "Name 5 actors.", "Name 5 actresses.", "Name 5 superhero characters.", "Name 5 animated movies.", "Name 5 TV show genres.", "Name 5 things found on a film set.", "Name 5 famous movie franchises.", "Name 5 words associated with cinema."]}, {"name": "SCHOOL SMART", "questions": ["Name 5 school subjects.", "Name 5 things found in a classroom.", "Name 5 things students carry to school.", "Name 5 professions that require education.", "Name 5 mathematical symbols.", "Name 5 planets.", "Name 5 branches of science.", "Name 5 things found in a laboratory.", "Name 5 items found in a library.", "Name 5 things a teacher can use in class."]}, {"name": "FASHION & STYLE", "questions": ["Name 5 clothing items.", "Name 5 shoe types.", "Name 5 fashion accessories.", "Name 5 clothing brands.", "Name 5 things people wear on their head.", "Name 5 things people wear around the neck.", "Name 5 fabrics.", "Name 5 fashion colours.", "Name 5 things found in a wardrobe.", "Name 5 outfits for a special occasion."]}, {"name": "BUSINESS WORLD", "questions": ["Name 5 businesses you can start with little money.", "Name 5 professions.", "Name 5 things sold in a supermarket.", "Name 5 payment methods.", "Name 5 business departments.", "Name 5 things found in an office.", "Name 5 online businesses.", "Name 5 things a customer may ask for.", "Name 5 financial institutions.", "Name 5 words associated with business."]}, {"name": "NATURE POWER", "questions": ["Name 5 natural resources.", "Name 5 types of weather.", "Name 5 things found in a forest.", "Name 5 things found in an ocean.", "Name 5 types of trees.", "Name 5 natural disasters.", "Name 5 things found in a garden.", "Name 5 sources of water.", "Name 5 things associated with the sky.", "Name 5 things that grow naturally."]}, {"name": "EVERYDAY THINGS", "questions": ["Name 5 things found in a bedroom.", "Name 5 things found in a bathroom.", "Name 5 things found in a kitchen.", "Name 5 things found in a living room.", "Name 5 things people use every morning.", "Name 5 things bought at a supermarket.", "Name 5 things you can put in a bag.", "Name 5 things that have buttons.", "Name 5 things that use electricity.", "Name 5 things found in a car."]}, {"name": "TRAVEL TIME", "questions": ["Name 5 means of transportation.", "Name 5 things found in an airport.", "Name 5 things packed for a trip.", "Name 5 reasons people travel.", "Name 5 places people stay while travelling.", "Name 5 things needed for international travel.", "Name 5 forms of public transport.", "Name 5 things seen on a road trip.", "Name 5 travel destinations in Africa.", "Name 5 things you can do on holiday."]}, {"name": "OCCUPATIONS", "questions": ["Name 5 medical professions.", "Name 5 jobs in technology.", "Name 5 jobs in entertainment.", "Name 5 jobs in education.", "Name 5 jobs that involve driving.", "Name 5 jobs you can do from home.", "Name 5 jobs that require uniforms.", "Name 5 creative professions.", "Name 5 jobs found at an airport.", "Name 5 jobs that help other people."]}, {"name": "COLOUR BLAST", "questions": ["Name 5 colours.", "Name 5 things commonly red.", "Name 5 things commonly blue.", "Name 5 things commonly green.", "Name 5 things commonly yellow.", "Name 5 things associated with black.", "Name 5 things associated with white.", "Name 5 colours you can mix.", "Name 5 colourful objects.", "Name 5 colours containing the letter O."]}, {"name": "LETTER RUSH", "questions": ["Name 5 things starting with A.", "Name 5 things starting with B.", "Name 5 things starting with C.", "Name 5 things starting with D.", "Name 5 things starting with E.", "Name 5 things starting with F.", "Name 5 things starting with G.", "Name 5 things starting with H.", "Name 5 things starting with M.", "Name 5 things starting with S."]}, {"name": "HOME ZONE", "questions": ["Name 5 appliances.", "Name 5 pieces of furniture.", "Name 5 cleaning items.", "Name 5 bedroom items.", "Name 5 bathroom items.", "Name 5 kitchen appliances.", "Name 5 things found in a garage.", "Name 5 things found on a dining table.", "Name 5 things people use to relax at home.", "Name 5 things found near a television."]}, {"name": "PHONE & INTERNET", "questions": ["Name 5 things you can do online.", "Name 5 video-sharing platforms.", "Name 5 email services.", "Name 5 online meeting tools.", "Name 5 things people use passwords for.", "Name 5 internet abbreviations.", "Name 5 things you can download.", "Name 5 things people post online.", "Name 5 common phone features.", "Name 5 reasons someone uses Wi-Fi."]}, {"name": "PARTY TIME", "questions": ["Name 5 things found at a party.", "Name 5 party foods.", "Name 5 party drinks.", "Name 5 party games.", "Name 5 reasons people celebrate.", "Name 5 party decorations.", "Name 5 birthday gifts.", "Name 5 things a DJ may use.", "Name 5 things people do at a celebration.", "Name 5 occasions people throw parties for."]}, {"name": "BODY & LIFE", "questions": ["Name 5 parts of the human body.", "Name 5 the five senses.", "Name 5 ways people stay active.", "Name 5 healthy foods.", "Name 5 things people do before sleeping.", "Name 5 things people do after waking.", "Name 5 things associated with exercise.", "Name 5 personal-care items.", "Name 5 ways to relax.", "Name 5 things people carry when leaving home."]}, {"name": "TRANSPORT", "questions": ["Name 5 car brands.", "Name 5 vehicle types.", "Name 5 things found inside a car.", "Name 5 road signs.", "Name 5 things a driver should carry.", "Name 5 forms of air transport.", "Name 5 forms of water transport.", "Name 5 forms of rail transport.", "Name 5 things found on a highway.", "Name 5 reasons a car may stop."]}, {"name": "NIGERIA VIBE", "questions": ["Name 5 Nigerian cities.", "Name 5 Nigerian languages.", "Name 5 Nigerian foods.", "Name 5 Nigerian music artists.", "Name 5 Nigerian footballers.", "Name 5 Nigerian cultural festivals.", "Name 5 things associated with Nigerian parties.", "Name 5 Nigerian clothing styles.", "Name 5 Nigerian tourist places.", "Name 5 Nigerian brands."]}, {"name": "MIXED BAG", "questions": ["Name 5 things that can be opened.", "Name 5 things that can be locked.", "Name 5 things that can be broken.", "Name 5 things that can be switched on.", "Name 5 things that can be carried.", "Name 5 things that can be folded.", "Name 5 things that can be washed.", "Name 5 things that can be charged.", "Name 5 things that can be shared.", "Name 5 things that can be collected."]}, {"name": "FAST THINKERS", "questions": ["Name 5 things that are round.", "Name 5 things that are usually cold.", "Name 5 things that are usually hot.", "Name 5 things that make noise.", "Name 5 things that can fly.", "Name 5 things that move quickly.", "Name 5 things people lose easily.", "Name 5 things people often forget.", "Name 5 things found in a pocket.", "Name 5 things people use every day."]}, {"name": "ENTERTAINMENT", "questions": ["Name 5 comedians.", "Name 5 dance styles.", "Name 5 musical instruments.", "Name 5 entertainment venues.", "Name 5 things performers use on stage.", "Name 5 types of shows.", "Name 5 famous fictional characters.", "Name 5 things associated with theatre.", "Name 5 things associated with dancing.", "Name 5 things people watch for entertainment."]}, {"name": "WORDS & LANGUAGE", "questions": ["Name 5 words that rhyme with day.", "Name 5 words starting with T.", "Name 5 words with exactly 5 letters.", "Name 5 words associated with happiness.", "Name 5 words associated with school.", "Name 5 words associated with money.", "Name 5 words associated with travel.", "Name 5 words associated with music.", "Name 5 words associated with friendship.", "Name 5 words containing X."]}, {"name": "FINAL MIX", "questions": ["Name 5 things you would take to a desert island.", "Name 5 things that can make you laugh.", "Name 5 things people do when bored.", "Name 5 things you can buy with money.", "Name 5 things people celebrate.", "Name 5 things found in a market.", "Name 5 things that can be expensive.", "Name 5 things used for communication.", "Name 5 things to take on a long journey.", "Name 5 things that can make a good first impression."]}, {"name": "RANDOM RUSH", "questions": ["Name 5 things that are usually expensive.", "Name 5 things that are usually cheap.", "Name 5 things people keep in a wallet.", "Name 5 things found in a supermarket aisle.", "Name 5 things people do on weekends.", "Name 5 things you can see at night.", "Name 5 things you can hear in a busy place.", "Name 5 things people give as gifts.", "Name 5 things that can be used as a gift.", "Name 5 things people do before leaving home."]}];
-let socket=null, role=null, roomId="", playerName="", selectedSet=0, round=0, mySubmitted=false;
-let actionBusy=false;
+const DATA=[{"name": "TECHNOLOGY", "questions": ["Which protocol is primarily responsible for translating a domain name into an IP address?", "What does the acronym CAPTCHA stand for?", "Which data structure follows the last-in, first-out principle?", "What is the main purpose of a compiler?", "Which HTTP status code means that a requested resource was not found?", "In cybersecurity, what is phishing primarily designed to obtain?", "What does RAM allow a computer to do that long-term storage does not?", "Which technology is commonly used to create tamper-resistant distributed ledgers?", "What is the hexadecimal representation of the decimal number 255?", "What does API stand for in software development?"]}, {"name": "SCIENCE", "questions": ["What phenomenon causes a prism to separate white light into its component colours?", "Which subatomic particle determines the atomic number of an element?", "What is the SI unit of electric resistance?", "Which gas makes up the largest percentage of Earth's atmosphere?", "What is the name of the boundary around a black hole beyond which light cannot escape?", "Which organelle is chiefly responsible for ATP production in aerobic eukaryotic cells?", "What is the process by which plants lose water vapour through tiny openings in their leaves?", "Which force keeps planets in orbit around the Sun?", "What is the chemical symbol for tungsten?", "Which branch of science studies heredity and variation in living organisms?"]}, {"name": "WORLD HISTORY", "questions": ["Which treaty formally ended the First World War between Germany and the Allied Powers?", "Which ancient civilisation developed cuneiform writing in Mesopotamia?", "Who was the first emperor of a unified China?", "Which city was divided by a wall from 1961 until 1989?", "What event is traditionally regarded as the beginning of the French Revolution?", "Which empire was ruled by Suleiman the Magnificent?", "Which ancient Roman city was buried by the eruption of Mount Vesuvius in AD 79?", "What was the name of the ship on which the Pilgrims travelled to North America in 1620?", "Which West African empire became famous under Mansa Musa?", "Which document signed in 1215 limited the power of the English monarch?"]}, {"name": "AFRICA", "questions": ["Which African lake is the largest by surface area?", "Which country is home to the ancient rock-hewn churches of Lalibela?", "Which river is the longest in Africa?", "Which African country has Portuguese as an official language and Luanda as its capital?", "Which desert covers much of Botswana and Namibia?", "Which country contains the historic city of Timbuktu?", "Which African mountain is the continent's highest point?", "Which island nation lies off the southeastern coast of Africa and has Antananarivo as its capital?", "Which country was formerly known as Abyssinia?", "Which African capital is located on the Gulf of Guinea and is the capital of Ghana?"]}, {"name": "NIGERIA", "questions": ["Which Nigerian river is formed by the confluence of the Niger and Benue Rivers?", "Which Nigerian city is widely known as the country's commercial capital?", "Who wrote the novel 'Things Fall Apart'?", "Which Nigerian state is home to the ancient city of Benin?", "What is the official currency of Nigeria?", "Which Nigerian city hosts the National Mosque and is the federal capital?", "Which Nigerian river is associated with the Niger Delta oil-producing region?", "Which Nigerian author wrote 'The Lion and the Jewel'?", "Which city is known for the ancient Kano city walls and traditional dye pits?", "Which Nigerian national park is famous for its population of chimpanzees and diverse wildlife?"]}, {"name": "GEOGRAPHY", "questions": ["Which strait separates Europe from Africa at their closest point?", "What is the capital city of Mongolia?", "Which country has the world's longest coastline?", "Which mountain range traditionally forms part of the boundary between Europe and Asia?", "Which river flows through Budapest?", "What is the largest island in the Mediterranean Sea?", "Which country completely surrounds Lesotho?", "Which ocean is the deepest?", "Which city stands at the confluence of the Blue and White Nile?", "Which country contains the geographical region of Transylvania?"]}, {"name": "MUSIC", "questions": ["Which instrument family does the oboe belong to?", "What is the musical term for gradually becoming louder?", "Which composer wrote the Ninth Symphony commonly associated with 'Ode to Joy'?", "What is the standard number of strings on a violin?", "Which clef is also known as the G clef?", "What does a cappella mean in vocal music?", "Which genre is strongly associated with the Jamaican musical tradition that developed from ska and rocksteady?", "What is the term for the distance between two musical pitches?", "Which instrument is traditionally played with pedals and a set of strings inside a large wooden frame?", "What is a song performed by two singers commonly called?"]}, {"name": "FILM & TV", "questions": ["Which film genre traditionally uses a narrator to explain events over a stylised visual sequence?", "What is the name for the written blueprint of dialogue and scenes used in filmmaking?", "Which award is commonly known as the Oscar?", "What is a film's 'mise-en-scène' concerned with?", "What does CGI stand for in film production?", "Which type of shot shows a subject from head to toe?", "What is the role of a cinematographer?", "What is a sequel?", "What is a film released before the main story, explaining earlier events, called?", "What does a film editor primarily assemble?"]}, {"name": "LITERATURE", "questions": ["Who wrote 'One Hundred Years of Solitude'?", "What literary device gives human qualities to non-human things?", "Which Shakespeare play features the characters Rosencrantz and Guildenstern?", "What is a stanza in poetry?", "Who wrote 'The Old Man and the Sea'?", "What is an unreliable narrator?", "Which novel begins with the line about a reasonable creature being in want of marriage?", "What is an allegory?", "Who wrote 'Half of a Yellow Sun'?", "What is the term for a word that imitates a sound?"]}, {"name": "LANGUAGE", "questions": ["What is the study of word origins called?", "What is a palindrome?", "Which language has the greatest number of native speakers worldwide?", "What is the plural form of 'criterion'?", "What is a homophone?", "What does the prefix 'bio-' generally indicate?", "What is the term for a word borrowed from another language?", "Which writing system is traditionally associated with ancient Egyptian hieroglyphs?", "What is an oxymoron?", "What is the difference between a synonym and an antonym?"]}, {"name": "SPORTS", "questions": ["How many players from one team are on the field at the start of a football match?", "In tennis, what is a score of zero called?", "Which country hosted the first modern Olympic Games in 1896?", "What is the maximum break possible in standard snooker?", "How many points is a touchdown worth before any conversion in American football?", "What does 'LBW' stand for in cricket?", "Which athletics event combines ten track-and-field disciplines?", "What is the distance of a marathon officially?", "In basketball, how many points is a free throw worth?", "What surface is traditionally associated with Wimbledon?"]}, {"name": "FOOTBALL", "questions": ["What is the offside rule primarily intended to prevent?", "How many minutes are played in regulation time in a standard football match?", "What is a hat-trick in football?", "What does VAR stand for?", "Which part of the body may not normally be used deliberately by an outfield player to control the ball?", "What is a clean sheet?", "How many players does a team normally have on the pitch including the goalkeeper?", "What is awarded when a defending player commits a foul inside their own penalty area that merits a direct free kick?", "What is extra time used for in knockout football?", "What does a red card mean for the player receiving it?"]}, {"name": "COUNTRIES", "questions": ["Which country has the capital city of Reykjavik?", "Which country uses the baht as its currency?", "Which country has Canberra as its capital?", "Which country is home to Mount Fuji?", "Which country has Ljubljana as its capital?", "Which country uses the forint as its currency?", "Which country has Rabat as its capital?", "Which country is famous for the fjords around Bergen?", "Which country has the city of Cusco?", "Which country has the capital city of Addis Ababa?"]}, {"name": "CITIES", "questions": ["Which city is known as the City of Canals and is built on a lagoon in Italy?", "Which city is home to the Acropolis?", "Which city lies on both sides of the Bosporus?", "Which city is the capital of South Korea?", "Which city is famous for the Christ the Redeemer statue?", "Which city is the administrative capital of South Africa?", "Which city is home to the Burj Khalifa?", "Which city is associated with the historic Alhambra palace?", "Which city is located near the meeting point of the Potomac and Anacostia Rivers?", "Which city is known for the ancient Colosseum?"]}, {"name": "PLACES & LANDMARKS", "questions": ["Where is Machu Picchu located?", "In which country is Petra located?", "Where would you find the ancient temple complex of Angkor Wat?", "Which country contains the Serengeti?", "Where is the Taj Mahal?", "Which country is home to the Great Barrier Reef?", "Where is the Sagrada Família?", "Which country contains the archaeological site of Chichen Itza?", "Where would you find the Palace of Versailles?", "Which country contains the Galápagos Islands?"]}, {"name": "FOOD & DRINK", "questions": ["Which grain is traditionally used to make risotto?", "What is the main ingredient in hummus?", "Which spice comes from the dried stigma of a crocus flower?", "What is miso traditionally made from?", "Which fruit is used to make guacamole?", "What type of pastry is used in a classic baklava?", "What is the main ingredient in traditional falafel?", "Which cheese is traditionally used in Greek salad?", "What is the base spirit in a classic mojito?", "Which country is strongly associated with the dish paella?"]}, {"name": "NATURE", "questions": ["What is the largest living species of lizard?", "Which animal is the fastest land mammal?", "What is the process by which a caterpillar becomes a butterfly called?", "Which tree produces acorns?", "What is a group of lions commonly called?", "Which mammal is capable of true sustained flight?", "What is the largest species of shark?", "Which biome is characterised by permanently frozen subsoil?", "What is the world's largest rainforest?", "Which bird is famous for being unable to fly but exceptionally fast underwater?"]}, {"name": "HUMAN BODY", "questions": ["Which chamber of the human heart pumps oxygenated blood into systemic circulation?", "What is the largest organ of the human body?", "Which blood cells are primarily responsible for oxygen transport?", "What is the name of the thigh bone?", "Which part of the brain coordinates balance and fine motor control?", "Which organ produces insulin?", "What is the smallest bone in the human body?", "Which type of joint is found at the shoulder?", "What pigment gives human skin much of its colour?", "Which organ is primarily responsible for filtering waste from the blood to form urine?"]}, {"name": "BUSINESS", "questions": ["What does GDP measure?", "What is an IPO?", "What does a company's liquidity describe?", "What is a monopoly?", "What is a balance sheet primarily used to show?", "What is inflation?", "What does ROI stand for?", "What is a dividend?", "What is the main purpose of a business trademark?", "What does diversification generally mean in investment?"]}, {"name": "ECONOMICS", "questions": ["What is opportunity cost?", "What happens to purchasing power when general prices rise and income stays unchanged?", "What is a central bank's monetary policy?", "What is a budget deficit?", "What does supply generally describe in a market?", "What is the difference between nominal and real values?", "What is a tariff?", "What is deflation?", "What is the law of demand?", "What does a floating exchange rate mean?"]}, {"name": "INVENTIONS", "questions": ["Who is credited with inventing the practical incandescent light bulb?", "Which invention is closely associated with Johannes Gutenberg?", "Who developed the first successful polio vaccine?", "Which invention made long-distance voice communication possible?", "Who is commonly credited with the modern alternating-current induction motor?", "What invention uses a lens system to magnify distant objects?", "Which invention is associated with the Wright brothers?", "What device measures atmospheric pressure?", "Who developed the first practical telephone?", "What invention converts mechanical energy into electrical energy?"]}, {"name": "MATH & LOGIC", "questions": ["What is the only even prime number?", "What is the square root of 144?", "What is a number divisible only by 1 and itself called?", "What is the sum of the interior angles of a triangle?", "What is the probability of getting heads on a fair coin?", "What is the value of 2 to the power of 10?", "What is the perimeter of a square with side length 9 cm?", "What is the next prime number after 29?", "What does the symbol π approximately equal?", "What is the median of the numbers 3, 7, 9, 12, and 20?"]}, {"name": "SPACE", "questions": ["Which planet has the shortest year in our solar system?", "What is the name of our galaxy?", "Which planet is famous for its prominent ring system?", "What is a light-year a measure of?", "Which planet has the Great Red Spot?", "What is the closest star to Earth after the Sun?", "What is the name of the first artificial satellite?", "Which planet rotates on its side with an extreme axial tilt?", "What is a supernova?", "What force keeps artificial satellites in orbit around Earth?"]}, {"name": "INTERNET", "questions": ["What does HTTPS add to ordinary HTTP?", "What is a URL?", "What does DNS do?", "What is two-factor authentication designed to improve?", "What is cloud computing?", "What does bandwidth describe in a network?", "What is a browser cookie?", "What is an IP address used to identify?", "What is end-to-end encryption intended to protect?", "What is a domain's top-level domain?"]}, {"name": "GAMING", "questions": ["What does FPS stand for in video games?", "What is an NPC?", "What does PvP mean?", "What is a game engine?", "What is latency in an online game?", "What is a speedrun?", "What does DLC stand for?", "What is permadeath?", "What is a hitbox?", "What does matchmaking do in multiplayer games?"]}, {"name": "ART & CULTURE", "questions": ["What is a fresco?", "Which art movement is associated with Monet and Renoir?", "What is calligraphy?", "What is a sculpture made by carving from a block of stone called?", "What does 'Renaissance' mean?", "Which architectural style is associated with pointed arches and flying buttresses?", "What is a museum curator responsible for?", "What is a motif in art?", "What is an art medium?", "What is cultural heritage?"]}, {"name": "GENERAL KNOWLEDGE", "questions": ["What is the smallest country in the world by area?", "How many sides does a dodecagon have?", "Which metal has the chemical symbol Au?", "What is the longest bone in the human body?", "Which planet is known as the Red Planet?", "What is the capital of Canada?", "Which instrument is used to measure temperature?", "What is the hardest natural mineral?", "Which continent contains the Sahara Desert?", "What is the primary language spoken in Brazil?"]}, {"name": "NAMES", "questions": ["Which name is traditionally associated with the meaning 'light' in many naming traditions?", "What is the feminine form commonly associated with the name Alexander?", "Which biblical name means 'gift of God'?", "What name is commonly shortened to 'Liz'?", "Which name is commonly associated with the meaning 'wisdom' in Greek tradition?", "What is the common shortened form of Benjamin?", "Which name is traditionally associated with the meaning 'peace'?", "What name is commonly shortened to 'Sam' and can be used for both genders?", "Which name is associated with the meaning 'noble' in Germanic naming traditions?", "What name is commonly shortened to 'Theo'?"]}, {"name": "THINGS", "questions": ["What household device is designed to remove moisture from the air?", "What tool is used to measure the internal or external diameter of small objects precisely?", "What object is commonly used to protect a document from rain or spills?", "What device converts electrical energy into mechanical motion in many appliances?", "What tool is designed to tighten or loosen screws with a cross-shaped head?", "What instrument is used to measure atmospheric humidity?", "What object is used to reflect light and form an image of a person?", "What device is used to detect smoke in buildings?", "What tool is commonly used to cut wood by hand with a toothed blade?", "What object is used to connect a computer to a wired network?"]}, {"name": "NIGERIAN CULTURE", "questions": ["Which Nigerian festival is strongly associated with the traditional Yoruba city of Osogbo?", "What is the traditional Yoruba title commonly translated as 'king'?", "Which Nigerian ethnic group is strongly associated with the Igbo language?", "What is the name of the annual cultural festival celebrated in Calabar?", "Which Nigerian city is famous for the Argungu Fishing Festival?", "What is the name of the traditional Yoruba talking drum?", "Which Nigerian city is historically associated with the Durbar festival?", "What is the traditional Igbo masquerade festival commonly associated with Anambra and southeastern Nigeria?", "Which Nigerian cultural art form is especially associated with indigo-dyed textiles?", "What is the name commonly given to the Nigerian palm-wine musical tradition associated with guitar-based highlife influences?"]}];
+let socket=null,role="",room="",name="",setIndex=0,round=0,submitted=false,timerEnd=0,timerLoop=null;
 
-function el(id){return document.getElementById(id)}
-function esc(x){return String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
-function showHost(){el("landing").classList.add("hidden");el("hostSetup").classList.remove("hidden");renderSets()}
-function showJoin(){el("landing").classList.add("hidden");el("joinSetup").classList.remove("hidden")}
-function renderSets(){
-  el("sets").innerHTML=DATA.map((s,i)=>`<button class="set ${i===selectedSet?'on':''}" onclick="selectedSet=${i};renderSets()">${i+1}. ${esc(s.name)}</button>`).join("");
-}
+function $(id){return document.getElementById(id)}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function show(id){document.querySelectorAll(".screen").forEach(x=>x.classList.remove("on"));$(id).classList.add("on")}
+function home(){if(socket)socket.disconnect();location.reload()}
+function openHost(){show("hostSetup");renderSets()}
+function openJoin(){show("joinSetup")}
+function renderSets(){$("sets").innerHTML=DATA.map((s,i)=>`<button class="set ${i===setIndex?"on":""}" onclick="setIndex=${i};renderSets()">${i+1}. ${esc(s.name)}</button>`).join("")}
+function wait(fn){if(socket&&socket.connected)fn();else setTimeout(()=>wait(fn),100)}
 function connect(){
-  if(socket && socket.connected)return;
-  socket=io({transports:["websocket","polling"],reconnection:true,reconnectionAttempts:Infinity,reconnectionDelay:800,reconnectionDelayMax:5000,timeout:10000});
-
-  socket.on("connect",()=>{
-    if(role==="host") setHostStatus("🟢 Connected to game server.");
-    if(role==="player"){
-      setJoinStatus("🟢 Connected. Joining room...");
-      joinNow();
-    }
-  });
-
-  socket.on("connect_error",()=>{
-    if(role==="host") setHostStatus("🔴 Server connection error. Retrying...");
-    if(role==="player") setJoinStatus("🔴 Server connection error. Retrying...");
-  });
-
-  socket.on("room-created",d=>{
-    roomId=d.room;
-    el("hostCode").classList.remove("hidden");
-    el("roomCode").textContent=roomId;
-    el("hcode").textContent=roomId;
-    el("hostSetup").classList.add("hidden");
-    el("hostGame").classList.remove("hidden");
-
-    const qs=(DATA[selectedSet]&&Array.isArray(DATA[selectedSet].questions))
-      ? DATA[selectedSet].questions.slice(0,10) : [];
-
-    renderHost({room:roomId,set:selectedSet,round:0,question:qs[0]||"Question unavailable.",players:[],subs:[]});
-    setHostStatus("🟡 Syncing questions with server...");
-
-    socket.emit("host-sync",{questions:qs},(reply)=>{
-      if(reply && reply.ok){
-        setHostStatus("🟢 Room LIVE — question ready. Waiting for players...");
-      }else{
-        setHostStatus("🔴 Question sync failed. Please create a new room.");
-      }
-    });
-  });
-
-  socket.on("host-state",d=>renderHost(d));
-  socket.on("player-state",d=>renderPlayer(d));
-
-  socket.on("joined",d=>{
-    el("joinSetup").classList.add("hidden");
-    el("playerGame").classList.remove("hidden");
-    setJoinStatus("");
-    renderPlayer(d.state);
-  });
-
-  socket.on("join-error",d=>{
-    setJoinStatus("❌ "+(d.message||"Unable to join room."));
-  });
-
-  socket.on("answer-error",d=>{
-    mySubmitted=false;
-    el("panswer").disabled=false;
-    el("sendAnswerBtn").disabled=false;
-    el("pstatus").textContent="❌ "+(d.message||"Answer was not accepted.");
-  });
-
-  socket.on("action-error",d=>{
-    actionBusy=false;
-    const msg=d.message||"Action failed.";
-    setHostStatus("❌ "+msg);
-    const nb=el("nextBtn"); if(nb)nb.disabled=false;
-  });
-
-  socket.on("host-action-ok",d=>{
-    actionBusy=false;
-    const nb=el("nextBtn"); if(nb)nb.disabled=false;
-    if(d && d.message) setHostStatus("🟢 "+d.message);
-  });
-
-  socket.on("disconnect",()=>{
-    actionBusy=false;
-    if(role==="host") setHostStatus("🔴 Disconnected — reconnecting...");
-    if(role==="player") el("pstatus").textContent="🔴 Connection interrupted — reconnecting...";
-  });
+ if(socket&&socket.connected)return;
+ socket=io({transports:["polling","websocket"],timeout:15000,reconnection:true,reconnectionAttempts:Infinity,reconnectionDelay:1000});
+ socket.on("connect",()=>{if(role==="host")hostMsg("🟢 Connected to server.");else $("joinStatus").textContent="🟢 Connected. Joining room..."});
+ socket.on("connect_error",()=>{if(role==="host")hostMsg("🔴 Server connection problem. Retrying...");else $("joinStatus").textContent="🔴 Connection problem. Retrying..."});
+ socket.on("room-created",d=>{room=d.code;show("hostGame");$("hostCode").textContent=room;hostMsg("🟢 Room created. Syncing questions...");syncHost()});
+ socket.on("state",d=>{if(role==="host")renderHost(d);else renderPlayer(d)});
+ socket.on("server-error",d=>{if(role==="host")hostMsg("❌ "+d.message);else $("answerStatus").textContent="❌ "+d.message});
+ socket.on("disconnect",()=>{if(role==="host")hostMsg("🔴 Disconnected. Reconnecting...")});
 }
-function setHostStatus(t){if(el("hostStatus"))el("hostStatus").textContent=t}
-function setJoinStatus(t){if(el("joinStatus"))el("joinStatus").textContent=t}
-
-function createRoom(){
-  if(socket && socket.connected)return;
-  role="host";
-  selectedSet=Number(selectedSet)||0;
-  connect();
-  const wait=()=>{
-    if(socket && socket.connected){
-      socket.emit("create-room",{set:selectedSet});
-    }else setTimeout(wait,100);
-  };
-  wait();
-}
-
-function renderHost(d){
-  if(!d)return;
-  selectedSet=Number(d.set)||0;
-  round=Number(d.round)||0;
-  el("hr").textContent=round+1;
-  el("hset").textContent=DATA[selectedSet]?.name||"SET";
-  el("hq").textContent=d.question||"Waiting for question...";
-
-  const arr=(d.players||[]).slice().sort((a,b)=>b.xp-a.xp);
-  el("hboard").innerHTML=arr.length
-    ? arr.map((p,i)=>`<div class="rank"><span>${i+1}. ${esc(p.name)}</span><b class="xp">${p.xp} XP</b></div>`).join("")
-    : "<p class='sub'>No players yet.</p>";
-
-  const answers=d.subs||[];
-  el("hanswers").innerHTML=answers.length
-    ? answers.map((a,i)=>`<div class="player"><b>${esc(a.player)}</b><div class="answer ${a.correct?'correct':''}"><span>${esc(a.text)}</span>${a.correct?'<b class="xp">✓ +200 XP</b>':`<button class="btn green" onclick="award(${i})">✓ CORRECT +200 XP</button>`}</div></div>`).join("")
-    : "<p class='sub'>Waiting for player answers...</p>";
-
-  if(!actionBusy){
-    setHostStatus(`${arr.length} player${arr.length===1?'':'s'} connected • Room ${roomId}`);
-  }
-}
-
-function award(i){
-  if(!socket || !socket.connected || actionBusy)return;
-  actionBusy=true;
-  setHostStatus("🟡 Awarding +200 XP...");
-  socket.emit("award",{index:Number(i)},reply=>{
-    actionBusy=false;
-    if(reply && reply.ok) setHostStatus("🟢 +200 XP awarded.");
-    else setHostStatus("❌ "+((reply&&reply.message)||"Could not award XP."));
-  });
-}
-
-function hostNext(){
-  if(!socket || !socket.connected || actionBusy)return;
-  if(round>=9){
-    setHostStatus("🏁 Set complete — all 10 rounds finished.");
-    return;
-  }
-  actionBusy=true;
-  const nb=el("nextBtn"); if(nb)nb.disabled=true;
-  setHostStatus("🟡 Loading next question...");
-  socket.emit("next-round",{},reply=>{
-    if(reply && reply.ok){
-      // Server broadcast contains the new round/question and empty submissions.
-      setHostStatus("🟢 "+(reply.message||"Next question ready."));
-    }else{
-      actionBusy=false;
-      if(nb)nb.disabled=false;
-      setHostStatus("❌ "+((reply&&reply.message)||"Could not move to next round."));
-    }
-  });
-}
-
+function hostMsg(t){$("hostStatus").textContent=t}
+function createRoom(){role="host";$("hostSetupStatus").textContent="Creating room...";connect();wait(()=>socket.emit("create-room",{set:setIndex},r=>{if(!r?.ok)$("hostSetupStatus").textContent="❌ "+r.message}))}
+function syncHost(){socket.emit("sync-questions",{questions:DATA[setIndex].questions},r=>{if(!r?.ok)hostMsg("❌ "+r.message);else hostMsg("🟢 Room LIVE. Share code "+room+" with players.")})}
 function joinRoom(){
-  role="player";
-  roomId=el("joinCode").value.trim().toUpperCase();
-  playerName=el("joinName").value.trim();
-  if(!roomId||!playerName)return alert("Enter room code and your name.");
-  setJoinStatus("Connecting to room "+roomId+"...");
-  connect();
-  const wait=()=>{
-    if(socket && socket.connected) joinNow();
-    else setTimeout(wait,100);
-  };
-  wait();
+ name=$("joinName").value.trim();room=$("joinCode").value.trim().toUpperCase();
+ if(!name||!room){$("joinStatus").textContent="❌ Enter your name and room code.";return}
+ role="player";$("joinStatus").textContent="Connecting...";connect();
+ wait(()=>socket.emit("join-room",{room,name},r=>{
+   if(!r?.ok){$("joinStatus").textContent="❌ "+r.message;return}
+   show("playerGame");$("joinStatus").textContent="";
+ }));
 }
-function joinNow(){
-  if(!roomId||!playerName||!socket||!socket.connected)return;
-  socket.emit("join-room",{room:roomId,name:playerName});
+function startTimer(end){
+ timerEnd=end||Date.now()+20000;
+ clearInterval(timerLoop);
+ timerLoop=setInterval(()=>{const left=Math.max(0,Math.ceil((timerEnd-Date.now())/1000));$("hostTimer").textContent=left;$("playerTimer").textContent=left;if(left<=0)clearInterval(timerLoop)},250);
 }
-
+function renderHost(d){
+ setIndex=d.set;round=d.round;
+ $("hostRound").textContent=`ROUND ${round+1} / 10`;
+ $("hostQuestion").textContent=d.question||"Waiting for question...";
+ $("hostTimer").textContent=d.timeLeft;
+ $("hostBoard").innerHTML=(d.players||[]).map((p,i)=>`<div class="rank"><span>${i+1}. ${esc(p.name)}</span><b class="xp">${p.xp} XP</b></div>`).join("")||"<p class='sub'>No players yet.</p>";
+ $("hostAnswers").innerHTML=(d.answers||[]).map((a,i)=>`<div class="answer ${a.correct?"correct":""}">
+<div><b>${esc(a.player)}</b><br><span>${esc(a.text)}</span></div>
+${a.correct?"<b class='xp'>✓ +200 XP</b>":`<button class="btn green" onclick="markCorrect(${i})">✓ CORRECT +200 XP</button>`}</div>`).join("")||"<p class='sub'>Waiting for player answers...</p>";
+ if(d.roundStartedAt)startTimer(d.roundStartedAt+20000);
+}
 function renderPlayer(d){
-  if(!d)return;
-  selectedSet=Number(d.set)||0;
-  round=Number(d.round)||0;
-  mySubmitted=!!d.submitted;
-
-  el("pr").textContent=round+1;
-  el("pset").textContent=DATA[selectedSet]?.name||"SET";
-  el("pq").textContent=d.question||"Waiting for the host...";
-
-  const input=el("panswer"),send=el("sendAnswerBtn");
-  input.disabled=mySubmitted;
-  send.disabled=mySubmitted;
-
-  el("pstatus").textContent=mySubmitted
-    ? "✅ Answer submitted. Wait for the host."
-    : "🟢 Connected • You can submit your answer.";
-
-  const arr=(d.players||[]).slice().sort((a,b)=>b.xp-a.xp);
-  el("pboard").innerHTML=arr.map((p,i)=>
-    `<div class="rank"><span>${i+1}. ${esc(p.name)}</span><b class="xp">${p.xp} XP</b></div>`
-  ).join("");
+ round=d.round;$("playerRound").textContent=`ROUND ${round+1} / 10`;
+ $("playerQuestion").textContent=d.question||"Waiting for host...";
+ $("playerTimer").textContent=d.timeLeft;
+ $("playerBoard").innerHTML=(d.players||[]).map((p,i)=>`<div class="rank"><span>${i+1}. ${esc(p.name)}</span><b class="xp">${p.xp} XP</b></div>`).join("")||"<p class='sub'>Waiting for players...</p>";
+ submitted=!!d.mySubmitted;
+ $("submitBtn").disabled=submitted;
+ $("answerInput").disabled=submitted;
+ $("answerStatus").textContent=submitted?"✅ Answer submitted. Waiting for the host.":"🟢 You can submit your answer.";
+ if(d.roundStartedAt)startTimer(d.roundStartedAt+20000);
 }
-
-function sendAnswer(){
-  if(!socket||!socket.connected){
-    el("pstatus").textContent="🔴 Not connected to the game server.";
-    return;
-  }
-  if(mySubmitted)return;
-
-  const input=el("panswer"),v=input.value.trim();
-  if(!v)return alert("Type your answer first.");
-
-  mySubmitted=true;
-  input.disabled=true;
-  el("sendAnswerBtn").disabled=true;
-  el("pstatus").textContent="🟡 Sending answer...";
-
-  socket.emit("submit-answer",{text:v},reply=>{
-    if(reply && reply.ok){
-      el("pstatus").textContent="✅ Answer submitted. Wait for the host.";
-    }else{
-      mySubmitted=false;
-      input.disabled=false;
-      el("sendAnswerBtn").disabled=false;
-      el("pstatus").textContent="❌ "+((reply&&reply.message)||"Could not submit answer.");
-    }
-  });
+function submitAnswer(){
+ if(submitted)return;
+ const text=$("answerInput").value.trim();if(!text)return alert("Type your answer first.");
+ if(!socket||!socket.connected){$("answerStatus").textContent="🔴 Connection lost. Please wait for reconnect.";return}
+ $("submitBtn").disabled=true;$("answerInput").disabled=true;$("answerStatus").textContent="🟡 Sending...";
+ socket.emit("submit-answer",{text},r=>{
+   if(r?.ok){submitted=true;$("answerStatus").textContent="✅ Answer submitted. Waiting for the host."}
+   else{$("submitBtn").disabled=false;$("answerInput").disabled=false;$("answerStatus").textContent="❌ "+(r?.message||"Submission failed.");submitted=false}
+ });
 }
-
-function backHome(){
-  try{if(socket)socket.disconnect()}catch(_){}
-  location.reload();
+function markCorrect(i){
+ if(!socket||!socket.connected)return hostMsg("🔴 Not connected.");
+ hostMsg("🟡 Awarding +200 XP...");
+ socket.emit("mark-correct",{index:i},r=>{if(!r?.ok)hostMsg("❌ "+r.message);else hostMsg("🟢 "+r.message)})
+}
+function nextRound(){
+ if(round>=9){hostMsg("🏁 All 10 rounds are complete.");return}
+ $("nextBtn").disabled=true;hostMsg("🟡 Loading next question...");
+ socket.emit("next-round",{},r=>{ $("nextBtn").disabled=false;if(!r?.ok)hostMsg("❌ "+r.message);else hostMsg("🟢 "+r.message) });
 }
 </script>
-</body></html>
+</body>
+</html>

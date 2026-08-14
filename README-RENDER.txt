@@ -1,9 +1,14 @@
 SEY GAMERZ MENTIONING LIVE
 
-Render: create a WEB SERVICE (not Static Site).
+Render:
+Type: Web Service
 Build Command: npm install
 Start Command: npm start
-The service serves index.html and the Socket.IO multiplayer server.
 
-The game uses a central WebSocket connection, so multiple players can join the same room.
-Render supports inbound WebSocket connections on web services.
+IMPORTANT:
+Redeploy the service after replacing ALL files.
+Do not upload only index.html; this game needs server.js and package.json.
+
+The host creates the room and the first question is synced immediately.
+Host CORRECT awards +200 XP.
+NEXT ROUND advances the question and clears all submissions so every player can answer again.

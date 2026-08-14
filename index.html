@@ -31,7 +31,7 @@ input{background:#091431;color:#fff;border:1px solid #3a4c7c;border-radius:8px;p
 <input id="joinCode" placeholder="ROOM CODE" style="width:100%;margin:8px 0"><input id="joinName" placeholder="YOUR PLAYER NAME" style="width:100%;margin:8px 0">
 <button class="btn green" onclick="joinRoom()">JOIN ROOM</button><p id="joinStatus" class="status" style="margin-top:12px"></p></div></div>
 
-<div id="hostGame" class="hidden"><div class="top"><div class="brand"><span class="pink">SEY</span> GAMERZ</div><div class="badge">HOST • ROUND <b id="hr">1</b>/10</div><div class="row"><button class="btn yellow" onclick="hostNext()">NEXT ROUND →</button><button class="btn red" onclick="backHome()">LEAVE</button></div></div>
+<div id="hostGame" class="hidden"><div class="top"><div class="brand"><span class="pink">SEY</span> GAMERZ</div><div class="badge">HOST • ROUND <b id="hr">1</b>/10</div><div class="row"><button id="nextBtn" class="btn yellow" onclick="hostNext()">NEXT ROUND →</button><button class="btn red" onclick="backHome()">LEAVE</button></div></div>
 <div class="wrap"><div class="row" style="justify-content:space-between;align-items:center"><div><div class="title">🎯 MENTIONING 🎯</div><div class="sub">Host Control Panel</div></div><div class="badge" id="hset"></div></div>
 <div class="grid" style="margin-top:14px"><main><div class="card q"><b style="color:#6fe9ff">🎯🎮 GC QUESTION 🎮🎯</b><div id="hq" class="qtext"></div></div>
 <div class="card" style="margin-top:12px"><h3 style="color:#ffd21a">📥 PLAYER ANSWERS</h3><div id="hanswers" class="players"></div></div></main>
@@ -49,87 +49,238 @@ input{background:#091431;color:#fff;border:1px solid #3a4c7c;border-radius:8px;p
 <script>
 const DATA=[{"name": "TECH WAVE", "questions": ["Name 5 smartphone brands.", "Name 5 social media platforms.", "Name 5 web browsers.", "Name 5 programming languages.", "Name 5 computer operating systems.", "Name 5 messaging apps.", "Name 5 search engines.", "Name 5 computer hardware.", "Name 5 technology companies.", "Name 5 things you can do with a smartphone."]}, {"name": "MUSIC MANIA", "questions": ["Name 5 Nigerian music artists.", "Name 5 female music artists.", "Name 5 music genres.", "Name 5 musical instruments.", "Name 5 African music artists.", "Name 5 things found in a recording studio.", "Name 5 music streaming platforms.", "Name 5 famous bands or groups.", "Name 5 words associated with a concert.", "Name 5 songs with a number in the title."]}, {"name": "COUNTRY HUNT", "questions": ["Name 5 African countries.", "Name 5 countries in Europe.", "Name 5 countries in Asia.", "Name 5 countries in North America.", "Name 5 countries in South America.", "Name 5 island countries.", "Name 5 countries that start with A.", "Name 5 countries that start with S.", "Name 5 countries containing the letter N.", "Name 5 countries you would like to visit."]}, {"name": "CITY & PLACE", "questions": ["Name 5 cities in Nigeria.", "Name 5 capital cities.", "Name 5 famous cities around the world.", "Name 5 tourist attractions.", "Name 5 places where people go on holiday.", "Name 5 places found at an airport.", "Name 5 places found in a city.", "Name 5 famous landmarks.", "Name 5 places associated with football.", "Name 5 places you would not want to be late for."]}, {"name": "NAME GAME", "questions": ["Name 5 names that start with A.", "Name 5 names that start with B.", "Name 5 names that start with C.", "Name 5 male names that start with D.", "Name 5 female names that start with E.", "Name 5 names that start with M.", "Name 5 Nigerian names.", "Name 5 unisex names.", "Name 5 names with 5 letters.", "Name 5 names containing the letter Z."]}, {"name": "FOOD FRENZY", "questions": ["Name 5 Nigerian foods.", "Name 5 fruits.", "Name 5 vegetables.", "Name 5 fast foods.", "Name 5 breakfast foods.", "Name 5 foods made with rice.", "Name 5 foods cooked in a pot.", "Name 5 sweet foods.", "Name 5 foods commonly eaten at parties.", "Name 5 kitchen ingredients."]}, {"name": "ANIMAL KINGDOM", "questions": ["Name 5 wild animals.", "Name 5 domestic animals.", "Name 5 birds.", "Name 5 animals that live in water.", "Name 5 animals that can fly.", "Name 5 animals with four legs.", "Name 5 dangerous animals.", "Name 5 farm animals.", "Name 5 animals that start with C.", "Name 5 animals seen in a zoo."]}, {"name": "SPORTS ARENA", "questions": ["Name 5 football clubs.", "Name 5 football players.", "Name 5 sports.", "Name 5 basketball teams.", "Name 5 things found on a football pitch.", "Name 5 sporting competitions.", "Name 5 athletes.", "Name 5 sports played with a ball.", "Name 5 things a referee can use.", "Name 5 countries famous for football."]}, {"name": "MOVIE & TV", "questions": ["Name 5 movie genres.", "Name 5 streaming services.", "Name 5 actors.", "Name 5 actresses.", "Name 5 superhero characters.", "Name 5 animated movies.", "Name 5 TV show genres.", "Name 5 things found on a film set.", "Name 5 famous movie franchises.", "Name 5 words associated with cinema."]}, {"name": "SCHOOL SMART", "questions": ["Name 5 school subjects.", "Name 5 things found in a classroom.", "Name 5 things students carry to school.", "Name 5 professions that require education.", "Name 5 mathematical symbols.", "Name 5 planets.", "Name 5 branches of science.", "Name 5 things found in a laboratory.", "Name 5 items found in a library.", "Name 5 things a teacher can use in class."]}, {"name": "FASHION & STYLE", "questions": ["Name 5 clothing items.", "Name 5 shoe types.", "Name 5 fashion accessories.", "Name 5 clothing brands.", "Name 5 things people wear on their head.", "Name 5 things people wear around the neck.", "Name 5 fabrics.", "Name 5 fashion colours.", "Name 5 things found in a wardrobe.", "Name 5 outfits for a special occasion."]}, {"name": "BUSINESS WORLD", "questions": ["Name 5 businesses you can start with little money.", "Name 5 professions.", "Name 5 things sold in a supermarket.", "Name 5 payment methods.", "Name 5 business departments.", "Name 5 things found in an office.", "Name 5 online businesses.", "Name 5 things a customer may ask for.", "Name 5 financial institutions.", "Name 5 words associated with business."]}, {"name": "NATURE POWER", "questions": ["Name 5 natural resources.", "Name 5 types of weather.", "Name 5 things found in a forest.", "Name 5 things found in an ocean.", "Name 5 types of trees.", "Name 5 natural disasters.", "Name 5 things found in a garden.", "Name 5 sources of water.", "Name 5 things associated with the sky.", "Name 5 things that grow naturally."]}, {"name": "EVERYDAY THINGS", "questions": ["Name 5 things found in a bedroom.", "Name 5 things found in a bathroom.", "Name 5 things found in a kitchen.", "Name 5 things found in a living room.", "Name 5 things people use every morning.", "Name 5 things bought at a supermarket.", "Name 5 things you can put in a bag.", "Name 5 things that have buttons.", "Name 5 things that use electricity.", "Name 5 things found in a car."]}, {"name": "TRAVEL TIME", "questions": ["Name 5 means of transportation.", "Name 5 things found in an airport.", "Name 5 things packed for a trip.", "Name 5 reasons people travel.", "Name 5 places people stay while travelling.", "Name 5 things needed for international travel.", "Name 5 forms of public transport.", "Name 5 things seen on a road trip.", "Name 5 travel destinations in Africa.", "Name 5 things you can do on holiday."]}, {"name": "OCCUPATIONS", "questions": ["Name 5 medical professions.", "Name 5 jobs in technology.", "Name 5 jobs in entertainment.", "Name 5 jobs in education.", "Name 5 jobs that involve driving.", "Name 5 jobs you can do from home.", "Name 5 jobs that require uniforms.", "Name 5 creative professions.", "Name 5 jobs found at an airport.", "Name 5 jobs that help other people."]}, {"name": "COLOUR BLAST", "questions": ["Name 5 colours.", "Name 5 things commonly red.", "Name 5 things commonly blue.", "Name 5 things commonly green.", "Name 5 things commonly yellow.", "Name 5 things associated with black.", "Name 5 things associated with white.", "Name 5 colours you can mix.", "Name 5 colourful objects.", "Name 5 colours containing the letter O."]}, {"name": "LETTER RUSH", "questions": ["Name 5 things starting with A.", "Name 5 things starting with B.", "Name 5 things starting with C.", "Name 5 things starting with D.", "Name 5 things starting with E.", "Name 5 things starting with F.", "Name 5 things starting with G.", "Name 5 things starting with H.", "Name 5 things starting with M.", "Name 5 things starting with S."]}, {"name": "HOME ZONE", "questions": ["Name 5 appliances.", "Name 5 pieces of furniture.", "Name 5 cleaning items.", "Name 5 bedroom items.", "Name 5 bathroom items.", "Name 5 kitchen appliances.", "Name 5 things found in a garage.", "Name 5 things found on a dining table.", "Name 5 things people use to relax at home.", "Name 5 things found near a television."]}, {"name": "PHONE & INTERNET", "questions": ["Name 5 things you can do online.", "Name 5 video-sharing platforms.", "Name 5 email services.", "Name 5 online meeting tools.", "Name 5 things people use passwords for.", "Name 5 internet abbreviations.", "Name 5 things you can download.", "Name 5 things people post online.", "Name 5 common phone features.", "Name 5 reasons someone uses Wi-Fi."]}, {"name": "PARTY TIME", "questions": ["Name 5 things found at a party.", "Name 5 party foods.", "Name 5 party drinks.", "Name 5 party games.", "Name 5 reasons people celebrate.", "Name 5 party decorations.", "Name 5 birthday gifts.", "Name 5 things a DJ may use.", "Name 5 things people do at a celebration.", "Name 5 occasions people throw parties for."]}, {"name": "BODY & LIFE", "questions": ["Name 5 parts of the human body.", "Name 5 the five senses.", "Name 5 ways people stay active.", "Name 5 healthy foods.", "Name 5 things people do before sleeping.", "Name 5 things people do after waking.", "Name 5 things associated with exercise.", "Name 5 personal-care items.", "Name 5 ways to relax.", "Name 5 things people carry when leaving home."]}, {"name": "TRANSPORT", "questions": ["Name 5 car brands.", "Name 5 vehicle types.", "Name 5 things found inside a car.", "Name 5 road signs.", "Name 5 things a driver should carry.", "Name 5 forms of air transport.", "Name 5 forms of water transport.", "Name 5 forms of rail transport.", "Name 5 things found on a highway.", "Name 5 reasons a car may stop."]}, {"name": "NIGERIA VIBE", "questions": ["Name 5 Nigerian cities.", "Name 5 Nigerian languages.", "Name 5 Nigerian foods.", "Name 5 Nigerian music artists.", "Name 5 Nigerian footballers.", "Name 5 Nigerian cultural festivals.", "Name 5 things associated with Nigerian parties.", "Name 5 Nigerian clothing styles.", "Name 5 Nigerian tourist places.", "Name 5 Nigerian brands."]}, {"name": "MIXED BAG", "questions": ["Name 5 things that can be opened.", "Name 5 things that can be locked.", "Name 5 things that can be broken.", "Name 5 things that can be switched on.", "Name 5 things that can be carried.", "Name 5 things that can be folded.", "Name 5 things that can be washed.", "Name 5 things that can be charged.", "Name 5 things that can be shared.", "Name 5 things that can be collected."]}, {"name": "FAST THINKERS", "questions": ["Name 5 things that are round.", "Name 5 things that are usually cold.", "Name 5 things that are usually hot.", "Name 5 things that make noise.", "Name 5 things that can fly.", "Name 5 things that move quickly.", "Name 5 things people lose easily.", "Name 5 things people often forget.", "Name 5 things found in a pocket.", "Name 5 things people use every day."]}, {"name": "ENTERTAINMENT", "questions": ["Name 5 comedians.", "Name 5 dance styles.", "Name 5 musical instruments.", "Name 5 entertainment venues.", "Name 5 things performers use on stage.", "Name 5 types of shows.", "Name 5 famous fictional characters.", "Name 5 things associated with theatre.", "Name 5 things associated with dancing.", "Name 5 things people watch for entertainment."]}, {"name": "WORDS & LANGUAGE", "questions": ["Name 5 words that rhyme with day.", "Name 5 words starting with T.", "Name 5 words with exactly 5 letters.", "Name 5 words associated with happiness.", "Name 5 words associated with school.", "Name 5 words associated with money.", "Name 5 words associated with travel.", "Name 5 words associated with music.", "Name 5 words associated with friendship.", "Name 5 words containing X."]}, {"name": "FINAL MIX", "questions": ["Name 5 things you would take to a desert island.", "Name 5 things that can make you laugh.", "Name 5 things people do when bored.", "Name 5 things you can buy with money.", "Name 5 things people celebrate.", "Name 5 things found in a market.", "Name 5 things that can be expensive.", "Name 5 things used for communication.", "Name 5 things to take on a long journey.", "Name 5 things that can make a good first impression."]}, {"name": "RANDOM RUSH", "questions": ["Name 5 things that are usually expensive.", "Name 5 things that are usually cheap.", "Name 5 things people keep in a wallet.", "Name 5 things found in a supermarket aisle.", "Name 5 things people do on weekends.", "Name 5 things you can see at night.", "Name 5 things you can hear in a busy place.", "Name 5 things people give as gifts.", "Name 5 things that can be used as a gift.", "Name 5 things people do before leaving home."]}];
 let socket=null, role=null, roomId="", playerName="", selectedSet=0, round=0, mySubmitted=false;
+let actionBusy=false;
+
 function el(id){return document.getElementById(id)}
 function esc(x){return String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
 function showHost(){el("landing").classList.add("hidden");el("hostSetup").classList.remove("hidden");renderSets()}
 function showJoin(){el("landing").classList.add("hidden");el("joinSetup").classList.remove("hidden")}
-function renderSets(){el("sets").innerHTML=DATA.map((s,i)=>`<button class="set ${i===selectedSet?'on':''}" onclick="selectedSet=${i};renderSets()">${i+1}. ${esc(s.name)}</button>`).join("")}
+function renderSets(){
+  el("sets").innerHTML=DATA.map((s,i)=>`<button class="set ${i===selectedSet?'on':''}" onclick="selectedSet=${i};renderSets()">${i+1}. ${esc(s.name)}</button>`).join("");
+}
 function connect(){
- if(socket && socket.connected)return;
- socket=io({transports:["websocket","polling"],reconnection:true,reconnectionAttempts:10,reconnectionDelay:500});
- socket.on("connect",()=>{ if(role==='player') joinNow(); });
- socket.on("connect_error",()=>{ if(role==='player') setJoinStatus("❌ Could not reach the game server. Please try again."); });
- socket.on("room-created",d=>{
-  roomId=d.room;
-  el("hostCode").classList.remove("hidden");
-  el("roomCode").textContent=roomId;
-  el("hcode").textContent=roomId;
-  setHostStatus("🟢 Room LIVE — syncing questions...");
-  el("hostSetup").classList.add("hidden");
-  el("hostGame").classList.remove("hidden");
+  if(socket && socket.connected)return;
+  socket=io({transports:["websocket","polling"],reconnection:true,reconnectionAttempts:Infinity,reconnectionDelay:800,reconnectionDelayMax:5000,timeout:10000});
 
-  // Send the selected set's 10 questions to the server immediately.
-  // The server then owns the live question state for every player.
-  const qs = (DATA[selectedSet] && Array.isArray(DATA[selectedSet].questions))
-    ? DATA[selectedSet].questions.slice(0,10)
-    : [];
-  socket.emit("host-sync",{questions:qs});
-
-  renderHost({
-    ...d.state,
-    set:selectedSet,
-    round:0,
-    question:qs[0] || "Question unavailable — please choose another set."
+  socket.on("connect",()=>{
+    if(role==="host") setHostStatus("🟢 Connected to game server.");
+    if(role==="player"){
+      setJoinStatus("🟢 Connected. Joining room...");
+      joinNow();
+    }
   });
-  setHostStatus("🟢 Room LIVE — waiting for players...");
-});
- socket.on("host-state",d=>renderHost(d));
- socket.on("player-state",d=>renderPlayer(d));
- socket.on("joined",d=>{el("joinSetup").classList.add("hidden");el("playerGame").classList.remove("hidden");el("pstatus").textContent="🟢 Connected to host • Waiting for question...";renderPlayer(d.state)});
- socket.on("join-error",d=>{setJoinStatus("❌ "+d.message);});
- socket.on("answer-error",d=>{el("pstatus").textContent="❌ "+d.message;mySubmitted=false;el("panswer").disabled=false;el("sendAnswerBtn").disabled=false;});
- socket.on("player-disconnected",()=>{});
- socket.on("disconnect",()=>{if(role==='player')el("pstatus").textContent="🔴 Connection interrupted — reconnecting...";});
+
+  socket.on("connect_error",()=>{
+    if(role==="host") setHostStatus("🔴 Server connection error. Retrying...");
+    if(role==="player") setJoinStatus("🔴 Server connection error. Retrying...");
+  });
+
+  socket.on("room-created",d=>{
+    roomId=d.room;
+    el("hostCode").classList.remove("hidden");
+    el("roomCode").textContent=roomId;
+    el("hcode").textContent=roomId;
+    el("hostSetup").classList.add("hidden");
+    el("hostGame").classList.remove("hidden");
+
+    const qs=(DATA[selectedSet]&&Array.isArray(DATA[selectedSet].questions))
+      ? DATA[selectedSet].questions.slice(0,10) : [];
+
+    renderHost({room:roomId,set:selectedSet,round:0,question:qs[0]||"Question unavailable.",players:[],subs:[]});
+    setHostStatus("🟡 Syncing questions with server...");
+
+    socket.emit("host-sync",{questions:qs},(reply)=>{
+      if(reply && reply.ok){
+        setHostStatus("🟢 Room LIVE — question ready. Waiting for players...");
+      }else{
+        setHostStatus("🔴 Question sync failed. Please create a new room.");
+      }
+    });
+  });
+
+  socket.on("host-state",d=>renderHost(d));
+  socket.on("player-state",d=>renderPlayer(d));
+
+  socket.on("joined",d=>{
+    el("joinSetup").classList.add("hidden");
+    el("playerGame").classList.remove("hidden");
+    setJoinStatus("");
+    renderPlayer(d.state);
+  });
+
+  socket.on("join-error",d=>{
+    setJoinStatus("❌ "+(d.message||"Unable to join room."));
+  });
+
+  socket.on("answer-error",d=>{
+    mySubmitted=false;
+    el("panswer").disabled=false;
+    el("sendAnswerBtn").disabled=false;
+    el("pstatus").textContent="❌ "+(d.message||"Answer was not accepted.");
+  });
+
+  socket.on("action-error",d=>{
+    actionBusy=false;
+    const msg=d.message||"Action failed.";
+    setHostStatus("❌ "+msg);
+    const nb=el("nextBtn"); if(nb)nb.disabled=false;
+  });
+
+  socket.on("host-action-ok",d=>{
+    actionBusy=false;
+    const nb=el("nextBtn"); if(nb)nb.disabled=false;
+    if(d && d.message) setHostStatus("🟢 "+d.message);
+  });
+
+  socket.on("disconnect",()=>{
+    actionBusy=false;
+    if(role==="host") setHostStatus("🔴 Disconnected — reconnecting...");
+    if(role==="player") el("pstatus").textContent="🔴 Connection interrupted — reconnecting...";
+  });
 }
 function setHostStatus(t){if(el("hostStatus"))el("hostStatus").textContent=t}
 function setJoinStatus(t){if(el("joinStatus"))el("joinStatus").textContent=t}
+
 function createRoom(){
- role='host';connect();
- const wait=()=>{if(socket && socket.connected){socket.emit('create-room',{set:selectedSet});}else setTimeout(wait,100)};wait();
+  if(socket && socket.connected)return;
+  role="host";
+  selectedSet=Number(selectedSet)||0;
+  connect();
+  const wait=()=>{
+    if(socket && socket.connected){
+      socket.emit("create-room",{set:selectedSet});
+    }else setTimeout(wait,100);
+  };
+  wait();
 }
+
 function renderHost(d){
- if(!d)return;
- selectedSet=d.set;round=d.round;
- el("hr").textContent=round+1;el("hset").textContent=DATA[selectedSet].name;el("hq").textContent=d.question;
- const arr=(d.players||[]).slice().sort((a,b)=>b.xp-a.xp);
- el("hboard").innerHTML=arr.length?arr.map((p,i)=>`<div class="rank"><span>${i+1}. ${esc(p.name)}</span><b class="xp">${p.xp} XP</b></div>`).join(""):"<p class='sub'>No players yet.</p>";
- el("hanswers").innerHTML=(d.subs||[]).length?(d.subs.map((a,i)=>`<div class="player"><b>${esc(a.player)}</b><div class="answer ${a.correct?'correct':''}"><span>${esc(a.text)}</span>${a.correct?'<b class="xp">✓ +200 XP</b>':`<button class="btn green" onclick="award(${i})">✓ CORRECT +200 XP</button>`}</div></div>`).join("")):"<p class='sub'>Waiting for player answers...</p>";
- setHostStatus(`${arr.length} player${arr.length===1?'':'s'} connected • Room ${roomId}`);
+  if(!d)return;
+  selectedSet=Number(d.set)||0;
+  round=Number(d.round)||0;
+  el("hr").textContent=round+1;
+  el("hset").textContent=DATA[selectedSet]?.name||"SET";
+  el("hq").textContent=d.question||"Waiting for question...";
+
+  const arr=(d.players||[]).slice().sort((a,b)=>b.xp-a.xp);
+  el("hboard").innerHTML=arr.length
+    ? arr.map((p,i)=>`<div class="rank"><span>${i+1}. ${esc(p.name)}</span><b class="xp">${p.xp} XP</b></div>`).join("")
+    : "<p class='sub'>No players yet.</p>";
+
+  const answers=d.subs||[];
+  el("hanswers").innerHTML=answers.length
+    ? answers.map((a,i)=>`<div class="player"><b>${esc(a.player)}</b><div class="answer ${a.correct?'correct':''}"><span>${esc(a.text)}</span>${a.correct?'<b class="xp">✓ +200 XP</b>':`<button class="btn green" onclick="award(${i})">✓ CORRECT +200 XP</button>`}</div></div>`).join("")
+    : "<p class='sub'>Waiting for player answers...</p>";
+
+  if(!actionBusy){
+    setHostStatus(`${arr.length} player${arr.length===1?'':'s'} connected • Room ${roomId}`);
+  }
 }
-function award(i){if(socket)socket.emit('award',{index:i})}
-function hostNext(){if(socket)socket.emit('next-round')}
+
+function award(i){
+  if(!socket || !socket.connected || actionBusy)return;
+  actionBusy=true;
+  setHostStatus("🟡 Awarding +200 XP...");
+  socket.emit("award",{index:Number(i)},reply=>{
+    actionBusy=false;
+    if(reply && reply.ok) setHostStatus("🟢 +200 XP awarded.");
+    else setHostStatus("❌ "+((reply&&reply.message)||"Could not award XP."));
+  });
+}
+
+function hostNext(){
+  if(!socket || !socket.connected || actionBusy)return;
+  if(round>=9){
+    setHostStatus("🏁 Set complete — all 10 rounds finished.");
+    return;
+  }
+  actionBusy=true;
+  const nb=el("nextBtn"); if(nb)nb.disabled=true;
+  setHostStatus("🟡 Loading next question...");
+  socket.emit("next-round",{},reply=>{
+    if(reply && reply.ok){
+      // Server broadcast contains the new round/question and empty submissions.
+      setHostStatus("🟢 "+(reply.message||"Next question ready."));
+    }else{
+      actionBusy=false;
+      if(nb)nb.disabled=false;
+      setHostStatus("❌ "+((reply&&reply.message)||"Could not move to next round."));
+    }
+  });
+}
+
 function joinRoom(){
- role='player';roomId=el("joinCode").value.trim().toUpperCase();playerName=el("joinName").value.trim();
- if(!roomId||!playerName)return alert("Enter room code and your name.");
- setJoinStatus("Connecting to room "+roomId+"...");connect();
- const wait=()=>{if(socket&&socket.connected)joinNow();else setTimeout(wait,100)};wait();
+  role="player";
+  roomId=el("joinCode").value.trim().toUpperCase();
+  playerName=el("joinName").value.trim();
+  if(!roomId||!playerName)return alert("Enter room code and your name.");
+  setJoinStatus("Connecting to room "+roomId+"...");
+  connect();
+  const wait=()=>{
+    if(socket && socket.connected) joinNow();
+    else setTimeout(wait,100);
+  };
+  wait();
 }
-function joinNow(){if(!roomId||!playerName||!socket)return;socket.emit('join-room',{room:roomId,name:playerName})}
+function joinNow(){
+  if(!roomId||!playerName||!socket||!socket.connected)return;
+  socket.emit("join-room",{room:roomId,name:playerName});
+}
+
 function renderPlayer(d){
- if(!d)return;selectedSet=d.set;round=d.round;mySubmitted=!!(d.submitted);
- el("pr").textContent=round+1;el("pset").textContent=DATA[selectedSet].name;el("pq").textContent=d.question;
- const input=el("panswer"),send=el("sendAnswerBtn");input.disabled=mySubmitted;send.disabled=mySubmitted;
- el("pstatus").textContent=mySubmitted?"✅ Answer submitted. Wait for the host.":"🟢 Connected • You can submit your answer.";
- const arr=(d.players||[]).slice().sort((a,b)=>b.xp-a.xp);
- el("pboard").innerHTML=arr.map((p,i)=>`<div class="rank"><span>${i+1}. ${esc(p.name)}</span><b class="xp">${p.xp} XP</b></div>`).join("");
+  if(!d)return;
+  selectedSet=Number(d.set)||0;
+  round=Number(d.round)||0;
+  mySubmitted=!!d.submitted;
+
+  el("pr").textContent=round+1;
+  el("pset").textContent=DATA[selectedSet]?.name||"SET";
+  el("pq").textContent=d.question||"Waiting for the host...";
+
+  const input=el("panswer"),send=el("sendAnswerBtn");
+  input.disabled=mySubmitted;
+  send.disabled=mySubmitted;
+
+  el("pstatus").textContent=mySubmitted
+    ? "✅ Answer submitted. Wait for the host."
+    : "🟢 Connected • You can submit your answer.";
+
+  const arr=(d.players||[]).slice().sort((a,b)=>b.xp-a.xp);
+  el("pboard").innerHTML=arr.map((p,i)=>
+    `<div class="rank"><span>${i+1}. ${esc(p.name)}</span><b class="xp">${p.xp} XP</b></div>`
+  ).join("");
 }
+
 function sendAnswer(){
- if(!socket||!socket.connected)return el("pstatus").textContent="🔴 Not connected to the game server.";
- if(mySubmitted)return;
- const x=el("panswer"),v=x.value.trim();if(!v)return alert("Type your answer first.");
- mySubmitted=true;x.disabled=true;el("sendAnswerBtn").disabled=true;el("pstatus").textContent="Sending answer...";
- socket.emit('submit-answer',{text:v});
+  if(!socket||!socket.connected){
+    el("pstatus").textContent="🔴 Not connected to the game server.";
+    return;
+  }
+  if(mySubmitted)return;
+
+  const input=el("panswer"),v=input.value.trim();
+  if(!v)return alert("Type your answer first.");
+
+  mySubmitted=true;
+  input.disabled=true;
+  el("sendAnswerBtn").disabled=true;
+  el("pstatus").textContent="🟡 Sending answer...";
+
+  socket.emit("submit-answer",{text:v},reply=>{
+    if(reply && reply.ok){
+      el("pstatus").textContent="✅ Answer submitted. Wait for the host.";
+    }else{
+      mySubmitted=false;
+      input.disabled=false;
+      el("sendAnswerBtn").disabled=false;
+      el("pstatus").textContent="❌ "+((reply&&reply.message)||"Could not submit answer.");
+    }
+  });
 }
-function backHome(){try{if(socket)socket.disconnect()}catch(_){}location.reload()}
+
+function backHome(){
+  try{if(socket)socket.disconnect()}catch(_){}
+  location.reload();
+}
 </script>
 </body></html>
